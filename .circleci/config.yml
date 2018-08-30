@@ -8,6 +8,11 @@ jobs:
     docker:
       # specify the version you desire here
       - image: circleci/node:latest
+      - image: postgres:9.4.1
+        environment:
+          POSTGRES_USER: CarnetUser
+            POSTGRES_PASSWORD: CarnetPassword
+            POSTGRES_DB: Carnet
 
     working_directory: ~/repo
 

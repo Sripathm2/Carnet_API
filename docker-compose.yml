@@ -6,8 +6,8 @@ services:
   db:
     image: postgres
     environment:
-      POSTGRES_USER: nlpUser
-      POSTGRES_PASSWORD: nlpPassword
-      POSTGRES_DB: nlp
+      POSTGRES_USER: CarnetUser
+      POSTGRES_PASSWORD: CarnetPassword
+      POSTGRES_DB: Carnet
     ports:
     - 5432:5432
