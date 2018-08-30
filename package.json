@@ -1,7 +1,7 @@
 {
-  "name": "cam2-camera-api",
+  "name": "carnet-api",
   "version": "0.0.1",
-  "description": "CAM2 Camera Database API",
+  "description": "Carnet API",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -9,26 +9,22 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/PurdueCAM2Project/CameraDatabaseAPI.git"
+    "url": "git+https://github.com/sripathm22/Carnet_API.git"
   },
   "keywords": [
-    "CAM2",
     "API",
-    "camera",
     "computer",
-    "vision",
-    "CV",
     "database"
   ],
-  "author": "Purdue CAM2 Research Group",
+  "author": "Carnet",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/PurdueCAM2Project/CameraDatabaseAPI/issues"
+    "url": "https://github.com/sripathm22/Carnet_API/issues"
   },
   "engines": {
     "node": "9.4.0"
   },
-  "homepage": "https://github.com/PurdueCAM2Project/CameraDatabaseAPI#readme",
+  "homepage": "https://github.com/sripathm22/Carnet_API#readme",
   "dependencies": {
     "base64url": "^2.0.0",
     "bcrypt": "^2.0.0",
@@ -61,7 +57,7 @@
     "geolib": "^2.0.24"
   },
   "apidoc": {
-    "title": "CAM2 Camera Database API Documentation",
+    "title": "Carnet API Documentation",
     "template": {
       "forceLanguage": "en"
     }
