@@ -1,7 +1,6 @@
 let express = require('express');
 let jwt = require('jsonwebtoken');
 let bcrypt = require('bcrypt');
-let Cam2App = require('../models/cam2App');
 let config = require('../../config');
 
 // Instantiate router
