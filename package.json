@@ -34,10 +34,8 @@
     "express-bearer-token": "^2.1.1",
     "express-routes-versioning": "^1.0.1",
     "jsonwebtoken": "^8.1.0",
-    "matomo-tracker": "^2.1.0",
     "moment": "^2.22.2",
-    "mongoose": "^5.0.1",
-    "mongoose-transactions": "^1.1.1"
+    "pg": "^7.4.3"
   },
   "devDependencies": {
     "chai": "^3.5.0",
@@ -50,11 +48,7 @@
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.7.0",
     "mocha": "^2.5.3",
-    "n-readlines": "^0.2.8",
-    "plotly": "^1.0.6",
-    "regl-scatter2d": "^2.1.16",
     "sleep": "^5.1.1",
-    "geolib": "^2.0.24"
   },
   "apidoc": {
     "title": "Carnet API Documentation",
