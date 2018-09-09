@@ -2,6 +2,18 @@
 version: '3.1'
 
 services:
+  app:
+    container_name: app
+    restart: "no"
+    build: .
+    expose:
+    - "8080"
+    ports:
+    - "8080:8080"
+    environment:
+    - secret=TestValue
+    links:
+    - "db:db"
 
   db:
     image: postgres
@@ -9,5 +21,7 @@ services:
       POSTGRES_USER: CarnetUser
       POSTGRES_PASSWORD: CarnetPassword
       POSTGRES_DB: Carnet
+    expose:
+    - "5432"
     ports:
-    - 5432:5432
+    - "5432:5432"

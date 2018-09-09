@@ -20,9 +20,6 @@ let userRoutes = express.Router();
  *
  */
 userRoutes.post('/register', (req, res) => {
-
-    // Generate new random clientID and secret
-
     let user = {};
     user.clientID = req.body.userName;
     user.clientSecret = req.body.userPassword;
@@ -32,7 +29,7 @@ userRoutes.post('/register', (req, res) => {
     user.clientSecret = bcrypt.hashSync(user.clientSecret, 10);
 
     pool.query('INSERT INTO Users (index, key, value) VALUES ($1, $2)',
-        [user.clientID, user.clientSecret], (err, res) => {
+        [user.clientID, user.clientSecret], (err, response) => {
 
         if(err){
             return res.send({
