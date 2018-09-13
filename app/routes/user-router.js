@@ -1,16 +1,14 @@
 let express = require('express');
 let bcrypt = require('bcrypt');
-const { Pool } = require('pg');
+const { Pool, } = require('pg');
 
 const connectionString = process.env.DB_URL;
 const Insert_User = 'INSERT INTO Users (userName, password, email , securityQuestion, securityAnswer, ' +
     'name, notebooks) VALUES ($1, $2, $3,$4, $5, $6, $7)';
 
-
 // Instantiate router
 
 let userRoutes = express.Router();
-
 
 /**
  *
