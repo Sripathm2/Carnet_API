@@ -1,15 +1,10 @@
 let express = require('express');
-//let bearerToken = require('express-bearer-token');
 let bodyParser = require('body-parser');
 
 // Routers
 
 let userRoutes = require('./app/routes/user-router');
 let Versioning = require('express-routes-versioning');
-
-// Custom config files
-
-let config = require('./config');
 
 // Set up app
 
@@ -23,8 +18,6 @@ let routesVersioning = Versioning();
 app.use(bodyParser.json());
 
 // This middleware will attempt to extract the JWT from each request
-
-//app.use(bearerToken());
 
 // Base route to verify functionality
 
