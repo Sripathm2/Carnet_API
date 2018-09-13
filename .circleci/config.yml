@@ -11,12 +11,12 @@ jobs:
       - image: postgres:9.4.1
         environment:
           POSTGRES_USER: CarnetUser
-            POSTGRES_PASSWORD: CarnetPassword
-            POSTGRES_DB: Carnet
+          POSTGRES_PASSWORD: CarnetPassword
+          POSTGRES_DB: Carnet
 
     working_directory: ~/repo
 
-    steps:
+      steps:
       - checkout
 
       # Download and cache dependencies
@@ -26,11 +26,12 @@ jobs:
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
-      - run: npm install
+      - run: yarn install
 
       - save_cache:
           paths:
-            - node_modules
+          - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
-      - run: npm test
+      # run tests!
+      - run: yarn test

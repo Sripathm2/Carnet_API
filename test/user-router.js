@@ -10,8 +10,12 @@ describe('user-router', function() {
     describe('/POST register', () => {
 
         let owner = {
-            userName: 'TestUser',
-            userPassword: 'TestPassword'
+            userName: 'TestUser1',
+            password: 'TestPassword1',
+            email: 'test1@test.com',
+            securityQuestion: 'hello hint',
+            securityAnswer: 'hello',
+            name: 'test test',
         };
 
         it('it should succeed with correct fields ', done => {

@@ -8,10 +8,8 @@ services:
     build: .
     expose:
     - "8080"
-    ports:
-    - "8080:8080"
     environment:
-    - secret=TestValue
+    - DB_URL=postgresql://CarnetUser:CarnetPassword@db:5432/Carnet
     links:
     - "db:db"
 
@@ -23,5 +21,3 @@ services:
       POSTGRES_DB: Carnet
     expose:
     - "5432"
-    ports:
-    - "5432:5432"

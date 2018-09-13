@@ -2,13 +2,9 @@ let express = require('express');
 let bcrypt = require('bcrypt');
 const { Pool } = require('pg');
 
-const pool = new Pool({
-    user: 'CarnetUser',
-    host: 'localhost',
-    database: 'Carnet',
-    password: 'CarnetPassword',
-    port: 5432,
-});
+const connectionString = process.env.DB_URL;
+const Insert_User = 'INSERT INTO Users (userName, password, email , securityQuestion, securityAnswer, ' +
+    'name, notebooks) VALUES ($1, $2, $3,$4, $5, $6, $7)';
 
 
 // Instantiate router
@@ -21,27 +17,39 @@ let userRoutes = express.Router();
  */
 userRoutes.post('/register', (req, res) => {
     let user = {};
-    user.clientID = req.body.userName;
-    user.clientSecret = req.body.userPassword;
+    user.userName = req.body.userName;
+    user.password = req.body.password;
+    user.email = req.body.email;
+    user.securityQuestion = req.body.securityQuestion;
+    user.securityAnswer = req.body.securityAnswer;
+    user.name = req.body.name;
+    user.notebooks = '';
 
     // Encrypt client secret with blowfish before saving to database
 
-    user.clientSecret = bcrypt.hashSync(user.clientSecret, 10);
+    user.password = bcrypt.hashSync(user.password, 10);
 
-    pool.query('INSERT INTO Users (index, key, value) VALUES ($1, $2)',
-        [user.clientID, user.clientSecret], (err, response) => {
+    const pool = new Pool({
+        connectionString: connectionString,
+    });
+
+    pool.query(Insert_User,
+        [user.userName, user.password, user.email, user.securityQuestion, user.securityAnswer, user.name,
+            user.notebooks],  (err, response) => {
 
         if(err){
+            pool.end();
             return res.send({
                 errorType: 'InternalError',
                 message: err,
             });
         }
 
+        pool.end();
         return res.send({
             message: 'Success',
         })
-    })
+    });
 });
 
 module.exports = userRoutes;
