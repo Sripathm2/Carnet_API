@@ -11,9 +11,9 @@ const Insert_User = 'INSERT INTO Users (userName, password, email , securityQues
 let userRoutes = express.Router();
 
 /**
- *
  * test comment.
  */
+
 userRoutes.post('/register', (req, res) => {
     let user = {};
     user.userName = req.body.userName;
@@ -32,7 +32,7 @@ userRoutes.post('/register', (req, res) => {
         connectionString: connectionString,
     });
 
-    pool.query(Insert_User, [user.userName, user.password, user.email, user.securityQuestion, user.securityAnswer, user.name, user.notebooks,],  (err, response) => {
+    pool.query(Insert_User, [user.userName, user.password, user.email, user.securityQuestion, user.securityAnswer, user.name, user.notebooks, ],  (err, response) => {
 
         if(err){
             pool.end();

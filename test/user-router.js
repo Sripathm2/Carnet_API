@@ -24,7 +24,6 @@ describe('user-router', function() {
                 .send(owner)
                 .end((err, res) => {
                     res.should.have.status(200);
-                    console.log(res.body);
                     done();
                 });
         });
