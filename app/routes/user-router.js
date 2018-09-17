@@ -23,6 +23,7 @@ userRoutes.post('/register', (req, res) => {
     user.securityAnswer = req.body.securityAnswer;
     user.name = req.body.name;
     user.notebooks = '';
+    console.log(user.userName);
 
     // Encrypt client secret with blowfish before saving to database
 
