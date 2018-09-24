@@ -15,6 +15,44 @@ let userRoutes = express.Router();
  */
 
 userRoutes.post('/register', (req, res) => {
+
+    if (!req.body.userName) {
+        return res.status(422).send({
+            errorType: 'RequestFormatError',
+            message: 'Must include the userName.',
+        });
+    }
+    if (!req.body.password) {
+        return res.status(422).send({
+            errorType: 'RequestFormatError',
+            message: 'Must include the password.',
+        });
+    }
+    if (!req.body.email) {
+        return res.status(422).send({
+            errorType: 'RequestFormatError',
+            message: 'Must include the email.',
+        });
+    }
+    if (!req.body.securityQuestion) {
+        return res.status(422).send({
+            errorType: 'RequestFormatError',
+            message: 'Must include the securityQuestion.',
+        });
+    }
+    if (!req.body.securityAnswer) {
+        return res.status(422).send({
+            errorType: 'RequestFormatError',
+            message: 'Must include the securityAnswer.',
+        });
+    }
+    if (!req.body.name) {
+        return res.status(422).send({
+            errorType: 'RequestFormatError',
+            message: 'Must include the name.',
+        });
+    }
+
     let user = {};
     user.userName = req.body.userName;
     user.password = req.body.password;
