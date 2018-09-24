@@ -21,6 +21,7 @@ describe('user-router', function() {
             securityAnswer: 'hello',
             name: 'test test',
         };
+        let incomplete_owner = {};
 
         it('it should succeed with correct fields ', done => {
             chai.request(index)
@@ -34,27 +35,16 @@ describe('user-router', function() {
                     });
 
                     pool.query(Select_User,  (err, response) => {
-
-                        if(err){
-                            pool.end();
-                            return res.send({
-                                errorType: 'InternalError',
-                                message: err,
-                            });
-                        }
                         owner.userName.should.be.eql(response.rows[0].username);
-                        owner.password.should.be.eql(response.rows[0].password);
                         owner.email.should.be.eql(response.rows[0].email);
-                        owner.securityQuestion.should.be.eql(response.rows[0].securityQuestion);
-                        owner.securityAnswer.should.be.eql(response.rows[0].securityAnswer);
+                        owner.securityQuestion.should.be.eql(response.rows[0].securityquestion);
+                        owner.securityAnswer.should.be.eql(response.rows[0].securityanswer);
                         pool.end();
                         done();
                     });
 
                 });
         });
-
-        let incomplete_owner = {};
 
         it('it should fail with no fields ', done => {
             chai.request(index)
@@ -68,9 +58,8 @@ describe('user-router', function() {
                 });
         });
 
-        incomplete_owner.userName = 'testUserName';
-
         it('it should fail with no password ', done => {
+            incomplete_owner.userName = 'testUserName';
             chai.request(index)
                 .post('/user/register')
                 .send(incomplete_owner)
@@ -82,9 +71,8 @@ describe('user-router', function() {
                 });
         });
 
-        incomplete_owner.password = 'testPassword';
-
         it('it should fail with no email ', done => {
+            incomplete_owner.password = 'testPassword';
             chai.request(index)
                 .post('/user/register')
                 .send(incomplete_owner)
@@ -96,9 +84,8 @@ describe('user-router', function() {
                 });
         });
 
-        incomplete_owner.email = 'testEmail';
-
         it('it should fail with no securityQuestion ', done => {
+            incomplete_owner.email = 'testEmail';
             chai.request(index)
                 .post('/user/register')
                 .send(incomplete_owner)
@@ -110,9 +97,8 @@ describe('user-router', function() {
                 });
         });
 
-        incomplete_owner.securityQuestion = 'testSecurityQuestion';
-
         it('it should fail with no securityAnswer ', done => {
+            incomplete_owner.securityQuestion = 'testSecurityQuestion';
             chai.request(index)
                 .post('/user/register')
                 .send(incomplete_owner)
@@ -124,9 +110,8 @@ describe('user-router', function() {
                 });
         });
 
-        incomplete_owner.securityAnswer = 'testSecurityAnswer';
-
         it('it should fail with no name ', done => {
+            incomplete_owner.securityAnswer = 'testSecurityAnswer';
             chai.request(index)
                 .post('/user/register')
                 .send(incomplete_owner)
