@@ -35,10 +35,12 @@ describe('user-router', function() {
                     });
 
                     pool.query(Select_User,  (err, response) => {
+
                         //owner.userName.should.be.eql(response.rows[0].username);
                         //owner.email.should.be.eql(response.rows[0].email);
                         //owner.securityQuestion.should.be.eql(response.rows[0].securityquestion);
                         //owner.securityAnswer.should.be.eql(response.rows[0].securityanswer);
+
                         pool.end();
                         done();
                     });
