@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "test": "eslint  ~/repo && mocha",
-    "docker": "./wait-for-it.sh db:5432 && node Setup.js && mocha && node index.js"
+    "docker": "./wait-for-it.sh db:5432 && node Setup.js && eslint  ~/repo && mocha && node index.js"
   },
   "repository": {
     "type": "git",
