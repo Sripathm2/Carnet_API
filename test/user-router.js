@@ -5,7 +5,7 @@ let should = chai.should();
 const { Pool, } = require('pg');
 
 const connectionString = process.env.DB_URL;
-const Select_User = "Select * from Users where userName = 'TestUser1'";
+const Select_User = 'Select * from Users where userName = \'TestUser1\'';
 
 chai.use(chaiHttp);
 
