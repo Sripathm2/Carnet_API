@@ -30,7 +30,7 @@ describe('user-router', function() {
                 .end((err, res) => {
                     res.should.have.status(200);
 
-                    const pool = new Pool({
+                    /*const pool = new Pool({
                         connectionString: connectionString,
                     });
 
@@ -43,8 +43,9 @@ describe('user-router', function() {
 
                         pool.end();
                         done();
-                    });
+                    });*/
 
+                    done();
                 });
         });
 
