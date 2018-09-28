@@ -137,7 +137,6 @@ describe('user-router', function() {
                 .send(owner)
                 .end((err, res) => {
                     res.should.have.status(200);
-                    console.log(res.body);
                     res.body.message.should.be.eql('Success');
                     res.body.securityQuestion.should.be.eql('hello hint');
                     done();

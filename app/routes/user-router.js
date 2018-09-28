@@ -104,7 +104,6 @@ userRoutes.post('/forgetPassword', (req, res) => {
         connectionString: connectionString,
     });
 
-
     pool.query(Select_User_Forget_Password, [user.userName, ],  (err, response) => {
 
         if(err){
@@ -121,7 +120,6 @@ userRoutes.post('/forgetPassword', (req, res) => {
                 message: 'Incorrect userName.',
             });
         }
-
 
         pool.end();
         return res.send({
