@@ -2,10 +2,6 @@ let chai = require('chai');
 let index = require('../index');
 let chaiHttp = require('chai-http');
 let should = chai.should();
-const { Pool, } = require('pg');
-
-const connectionString = process.env.DB_URL;
-const Select_User = 'Select * from Users where userName = \'TestUser1\'';
 
 chai.use(chaiHttp);
 
@@ -122,6 +118,40 @@ describe('user-router', function() {
                     res.should.have.status(422);
                     res.body.errorType.should.be.eql('RequestFormatError');
                     res.body.message.should.be.eql('Must include the name.');
+                    done();
+                });
+        });
+
+    });
+
+    describe('/POST forgetPassword', () => {
+
+        let owner = {
+            userName: 'TestUser1',
+        };
+        let incomplete_owner = {};
+
+        it('it should succeed with correct fields ', done => {
+            chai.request(index)
+                .post('/user/forgetPassword')
+                .send(owner)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    console.log(res.body);
+                    res.body.message.should.be.eql('Success');
+                    res.body.securityQuestion.should.be.eql('hello hint');
+                    done();
+                });
+        });
+
+        it('it should fail with no fields ', done => {
+            chai.request(index)
+                .post('/user/forgetPassword')
+                .send(incomplete_owner)
+                .end((err, res) => {
+                    res.should.have.status(422);
+                    res.body.errorType.should.be.eql('RequestFormatError');
+                    res.body.message.should.be.eql('Must include the userName.');
                     done();
                 });
         });

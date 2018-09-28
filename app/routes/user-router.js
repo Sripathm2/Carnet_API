@@ -5,6 +5,7 @@ const { Pool, } = require('pg');
 const connectionString = process.env.DB_URL;
 const Insert_User = 'INSERT INTO Users (userName, password, email , securityQuestion, securityAnswer, ' +
     'name, notebooks) VALUES ($1, $2, $3,$4, $5, $6, $7)';
+const Select_User_Forget_Password = 'Select * From Users Where userName = $1';
 
 // Instantiate router
 
@@ -83,6 +84,49 @@ userRoutes.post('/register', (req, res) => {
         pool.end();
         return res.send({
             message: 'Success',
+        });
+    });
+});
+
+userRoutes.post('/forgetPassword', (req, res) => {
+
+    if (!req.body.userName) {
+        return res.status(422).send({
+            errorType: 'RequestFormatError',
+            message: 'Must include the userName.',
+        });
+    }
+
+    let user = {};
+    user.userName = req.body.userName;
+
+    const pool = new Pool({
+        connectionString: connectionString,
+    });
+
+
+    pool.query(Select_User_Forget_Password, [user.userName, ],  (err, response) => {
+
+        if(err){
+            pool.end();
+            return res.send({
+                errorType: 'InternalError',
+                message: err,
+            });
+        }
+
+        if(!response.rows[0].securityquestion){
+            return res.status(422).send({
+                errorType: 'NoSuchUserError',
+                message: 'Incorrect userName.',
+            });
+        }
+
+
+        pool.end();
+        return res.send({
+            message: 'Success',
+            securityQuestion: response.rows[0].securityquestion,
         });
     });
 });
