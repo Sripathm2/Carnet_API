@@ -124,11 +124,54 @@ describe('user-router', function() {
 
     });
 
-    describe('/POST forgetPassword', () => {
+    describe('/GET forgetPassword', () => {
+
+        it('it should succeed with correct fields ', done => {
+            chai.request(index)
+                .get('/user/forgetPassword')
+                .query({ userName: 'TestUser1', })
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.message.should.be.eql('Success');
+                    res.body.securityQuestion.should.be.eql('hello hint');
+                    done();
+                });
+        });
+
+        it('it should fail with no fields ', done => {
+            chai.request(index)
+                .get('/user/forgetPassword')
+                .end((err, res) => {
+                    res.should.have.status(422);
+                    res.body.errorType.should.be.eql('RequestFormatError');
+                    res.body.message.should.be.eql('Must include the userName.');
+                    done();
+                });
+        });
+
+        it('it should fail with incorrect user. ', done => {
+            chai.request(index)
+                .get('/user/forgetPassword')
+                .query({ userName: 'NoUser', })
+                .end((err, res) => {
+                    res.should.have.status(422);
+                    res.body.errorType.should.be.eql('NoSuchUserError');
+                    res.body.message.should.be.eql('Incorrect userName.');
+                    done();
+                });
+        });
+
+    });
+
+    describe('/POST register', () => {
 
         let owner = {
             userName: 'TestUser1',
+            password: 'TestPassword12',
+            securityQuestion: 'hello hint',
+            securityAnswer: 'hello',
         };
+
         let incomplete_owner = {};
 
         it('it should succeed with correct fields ', done => {
@@ -136,9 +179,9 @@ describe('user-router', function() {
                 .post('/user/forgetPassword')
                 .send(owner)
                 .end((err, res) => {
+                    console.log(res.body);
                     res.should.have.status(200);
                     res.body.message.should.be.eql('Success');
-                    res.body.securityQuestion.should.be.eql('hello hint');
                     done();
                 });
         });
@@ -151,6 +194,45 @@ describe('user-router', function() {
                     res.should.have.status(422);
                     res.body.errorType.should.be.eql('RequestFormatError');
                     res.body.message.should.be.eql('Must include the userName.');
+                    done();
+                });
+        });
+
+        it('it should fail with no password ', done => {
+            incomplete_owner.userName = 'testUserName';
+            chai.request(index)
+                .post('/user/forgetPassword')
+                .send(incomplete_owner)
+                .end((err, res) => {
+                    res.should.have.status(422);
+                    res.body.errorType.should.be.eql('RequestFormatError');
+                    res.body.message.should.be.eql('Must include the password.');
+                    done();
+                });
+        });
+
+        it('it should fail with no securityQuestion ', done => {
+            incomplete_owner.password = 'testPassword';
+            chai.request(index)
+                .post('/user/forgetPassword')
+                .send(incomplete_owner)
+                .end((err, res) => {
+                    res.should.have.status(422);
+                    res.body.errorType.should.be.eql('RequestFormatError');
+                    res.body.message.should.be.eql('Must include the securityQuestion.');
+                    done();
+                });
+        });
+
+        it('it should fail with no securityAnswer ', done => {
+            incomplete_owner.securityQuestion = 'testSecurityQuestion';
+            chai.request(index)
+                .post('/user/forgetPassword')
+                .send(incomplete_owner)
+                .end((err, res) => {
+                    res.should.have.status(422);
+                    res.body.errorType.should.be.eql('RequestFormatError');
+                    res.body.message.should.be.eql('Must include the securityAnswer.');
                     done();
                 });
         });

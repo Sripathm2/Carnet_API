@@ -5,7 +5,8 @@ const { Pool, } = require('pg');
 const connectionString = process.env.DB_URL;
 const Insert_User = 'INSERT INTO Users (userName, password, email , securityQuestion, securityAnswer, ' +
     'name, notebooks) VALUES ($1, $2, $3,$4, $5, $6, $7)';
-const Select_User_Forget_Password = 'Select * From Users Where userName = $1';
+const Select_User_Forget_Password= 'Select * From Users Where userName = $1';
+const Update_User_Forget_Password= 'Update Users Set password = $2 Where userName = $1';
 
 // Instantiate router
 
@@ -56,16 +57,12 @@ userRoutes.post('/register', (req, res) => {
 
     let user = {};
     user.userName = req.body.userName;
-    user.password = req.body.password;
+    user.password = bcrypt.hashSync(req.body.password, 10);
     user.email = req.body.email;
     user.securityQuestion = req.body.securityQuestion;
-    user.securityAnswer = req.body.securityAnswer;
+    user.securityAnswer = req.body.securityAnswer.toLowerCase();
     user.name = req.body.name;
     user.notebooks = '';
-
-    // Encrypt client secret with blowfish before saving to database
-
-    user.password = bcrypt.hashSync(user.password, 10);
 
     const pool = new Pool({
         connectionString: connectionString,
@@ -88,9 +85,9 @@ userRoutes.post('/register', (req, res) => {
     });
 });
 
-userRoutes.post('/forgetPassword', (req, res) => {
+userRoutes.get('/forgetPassword', (req, res) => {
 
-    if (!req.body.userName) {
+    if (!req.query.userName) {
         return res.status(422).send({
             errorType: 'RequestFormatError',
             message: 'Must include the userName.',
@@ -98,7 +95,7 @@ userRoutes.post('/forgetPassword', (req, res) => {
     }
 
     let user = {};
-    user.userName = req.body.userName;
+    user.userName = req.query.userName;
 
     const pool = new Pool({
         connectionString: connectionString,
@@ -114,7 +111,7 @@ userRoutes.post('/forgetPassword', (req, res) => {
             });
         }
 
-        if(!response.rows[0].securityquestion){
+        if(!response.rows[0]){
             return res.status(422).send({
                 errorType: 'NoSuchUserError',
                 message: 'Incorrect userName.',
@@ -125,6 +122,102 @@ userRoutes.post('/forgetPassword', (req, res) => {
         return res.send({
             message: 'Success',
             securityQuestion: response.rows[0].securityquestion,
+        });
+    });
+});
+
+userRoutes.post('/forgetPassword', (req, res) => {
+
+    if (!req.body.userName) {
+        return res.status(422).send({
+            errorType: 'RequestFormatError',
+            message: 'Must include the userName.',
+        });
+    }
+
+    if (!req.body.password) {
+        return res.status(422).send({
+            errorType: 'RequestFormatError',
+            message: 'Must include the password.',
+        });
+    }
+
+    if (!req.body.securityQuestion) {
+        return res.status(422).send({
+            errorType: 'RequestFormatError',
+            message: 'Must include the securityQuestion.',
+        });
+    }
+
+    if (!req.body.securityAnswer) {
+        return res.status(422).send({
+            errorType: 'RequestFormatError',
+            message: 'Must include the securityAnswer.',
+        });
+    }
+
+
+    let user = {};
+    user.userName = req.body.userName;
+    user.password = bcrypt.hashSync(req.body.password, 10);
+    user.securityQuestion = req.body.securityQuestion;
+    user.securityAnswer = req.body.securityAnswer.toLowerCase();
+
+    const pool = new Pool({
+        connectionString: connectionString,
+    });
+
+    pool.query(Select_User_Forget_Password, [user.userName, ],  (err, response) => {
+
+        if(err){
+            pool.end();
+            return res.send({
+                errorType: 'InternalError',
+                message: err,
+            });
+        }
+
+        if(!response.rows[0]){
+            return res.status(422).send({
+                errorType: 'NoSuchUserError',
+                message: 'Incorrect userName1.',
+            });
+        }
+
+        if(response.rows[0].securityquestion !== user.securityQuestion){
+            return res.status(422).send({
+                errorType: 'IncorrectQuestionError',
+                message: 'Incorrect Security Question.',
+            });
+        }
+
+        if(response.rows[0].securityanswer !== user.securityAnswer){
+            return res.status(422).send({
+                errorType: 'IncorrectAnswerError',
+                message: 'Incorrect Security Answer.',
+            });
+        }
+
+        const pool1 = new Pool({
+            connectionString: connectionString,
+        });
+
+        pool1.query(Update_User_Forget_Password, [user.userName, user.password, ],  (err1, response1) => {
+
+            pool.end();
+            pool1.end();
+
+            if(err1){
+                pool.end();
+                return res.send({
+                    errorType: 'InternalError',
+                    message: err1,
+                });
+            }
+
+            return res.send({
+                message: 'Success',
+            });
         });
     });
 });
