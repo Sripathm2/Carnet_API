@@ -4,6 +4,7 @@ let bodyParser = require('body-parser');
 // Routers
 
 let userRoutes = require('./app/routes/user-router');
+let authRoutes = require('./app/routes/auth-router');
 let Versioning = require('express-routes-versioning');
 
 // Set up app
@@ -30,6 +31,10 @@ app.get('/', function(req, res) {
 
 app.use('/user', routesVersioning({
     '1.0.0': userRoutes,
+}));
+
+app.use('/auth', routesVersioning({
+    '1.0.0': authRoutes,
 }));
 
 // Go with Heroku's env port number or your own

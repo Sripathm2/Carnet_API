@@ -179,7 +179,6 @@ describe('user-router', function() {
                 .post('/user/forgetPassword')
                 .send(owner)
                 .end((err, res) => {
-                    console.log(res.body);
                     res.should.have.status(200);
                     res.body.message.should.be.eql('Success');
                     done();

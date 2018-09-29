@@ -222,4 +222,45 @@ userRoutes.post('/forgetPassword', (req, res) => {
     });
 });
 
+userRoutes.get('/forgetPassword', (req, res) => {
+
+    if (!req.query.userName) {
+        return res.status(422).send({
+            errorType: 'RequestFormatError',
+            message: 'Must include the userName.',
+        });
+    }
+
+    let user = {};
+    user.userName = req.query.userName;
+
+    const pool = new Pool({
+        connectionString: connectionString,
+    });
+
+    pool.query(Select_User_Forget_Password, [user.userName, ],  (err, response) => {
+
+        if(err){
+            pool.end();
+            return res.send({
+                errorType: 'InternalError',
+                message: err,
+            });
+        }
+
+        if(!response.rows[0]){
+            return res.status(422).send({
+                errorType: 'NoSuchUserError',
+                message: 'Incorrect userName.',
+            });
+        }
+
+        pool.end();
+        return res.send({
+            message: 'Success',
+            securityQuestion: response.rows[0].securityquestion,
+        });
+    });
+});
+
 module.exports = userRoutes;
