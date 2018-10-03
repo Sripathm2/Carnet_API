@@ -12,12 +12,10 @@ describe('auth-router', function() {
         it('it should succeed with correct fields ', done => {
             chai.request(index)
                 .get('/auth/token')
-                .query({ userName: 'TestUser1', password: 'TestPassword1', })
+                .query({ userName: 'testUsername', password: 'passwords', })
                 .end((err, res) => {
                     console.log(res.body);
                     res.should.have.status(200);
-                    res.body.message.should.be.eql('Success');
-                    res.body.securityQuestion.should.be.eql('hello hint');
                     done();
                 });
         });

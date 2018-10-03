@@ -10,6 +10,7 @@ services:
     - "8080"
     environment:
     - DB_URL=postgresql://CarnetUser:CarnetPassword@db:5432/Carnet
+    - secret=sldjfhsdkisdv
     links:
     - "db:db"
 

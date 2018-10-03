@@ -9,13 +9,13 @@ const Select_User= 'Select * From Users Where userName = $1';
 
 // Instantiate router
 
-let userRoutes = express.Router();
+let authRoutes = express.Router();
 
 /**
  * test comment.
  */
 
-userRoutes.get('/token', (req, res) => {
+authRoutes.get('/token', (req, res) => {
 
     if (!req.query.userName) {
         return res.status(422).send({
@@ -58,9 +58,9 @@ userRoutes.get('/token', (req, res) => {
         }
 
         console.log(user.password);
-        console.log(response.rows[0].name);
+        console.log(response.rows[0].password);
 
-        if(bcrypt.compareSync(user.password, response.rows[0].password)){
+        if(bcrypt.compare(user.password, response.rows[0].password)){
             const payload = {
                 userName: user.userName,
             };
@@ -68,7 +68,7 @@ userRoutes.get('/token', (req, res) => {
             // Tokens expire in 5 minutes.
 
             let token;
-            token = jwt.sign(payload, config.userSecret, {
+            token = jwt.sign(payload, process.env.secret, {
                 expiresIn: '10h',
             });
             res.send({
@@ -76,7 +76,6 @@ userRoutes.get('/token', (req, res) => {
             });
         }
         else {
-
             res.status(401).send({
                 errorType: 'AuthenticationError',
                 message: 'Bad client secret.',
@@ -87,4 +86,4 @@ userRoutes.get('/token', (req, res) => {
     });
 });
 
-module.exports = userRoutes;
+module.exports = authRoutes;
