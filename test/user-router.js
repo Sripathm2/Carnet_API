@@ -25,22 +25,6 @@ describe('user-router', function() {
                 .send(owner)
                 .end((err, res) => {
                     res.should.have.status(200);
-
-                    /*const pool = new Pool({
-                        connectionString: connectionString,
-                    });
-
-                    pool.query(Select_User,  (err, response) => {
-
-                        //owner.userName.should.be.eql(response.rows[0].username);
-                        //owner.email.should.be.eql(response.rows[0].email);
-                        //owner.securityQuestion.should.be.eql(response.rows[0].securityquestion);
-                        //owner.securityAnswer.should.be.eql(response.rows[0].securityanswer);
-
-                        pool.end();
-                        done();
-                    });*/
-
                     done();
                 });
         });
@@ -131,6 +115,7 @@ describe('user-router', function() {
                 .get('/user/forgetPassword')
                 .query({ userName: 'TestUser1', })
                 .end((err, res) => {
+                    console.log(res.body);
                     res.should.have.status(200);
                     res.body.message.should.be.eql('Success');
                     res.body.securityQuestion.should.be.eql('hello hint');
@@ -163,7 +148,7 @@ describe('user-router', function() {
 
     });
 
-    describe('/POST register', () => {
+    describe('/POST forgetPassword', () => {
 
         let owner = {
             userName: 'TestUser1',
