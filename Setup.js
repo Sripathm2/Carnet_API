@@ -1,4 +1,5 @@
 //This code is for setting up the db locally.
+
 let bcrypt = require('bcrypt');
 const { Pool, } = require('pg');
 

@@ -5,8 +5,8 @@ const { Pool, } = require('pg');
 const connectionString = process.env.DB_URL;
 const Insert_User = 'INSERT INTO Users (userName, password, email , securityQuestion, securityAnswer, ' +
     'name, notebooks) VALUES ($1, $2, $3,$4, $5, $6, $7)';
-const Select_User_Forget_Password= 'Select * From Users Where userName = $1';
-const Update_User_Forget_Password= 'Update Users Set password = $2 Where userName = $1';
+const Select_User_Forget_Password = 'Select * From Users Where userName = $1';
+const Update_User_Forget_Password = 'Update Users Set password = $2 Where userName = $1';
 
 // Instantiate router
 
@@ -155,7 +155,6 @@ userRoutes.post('/forgetPassword', (req, res) => {
             message: 'Must include the securityAnswer.',
         });
     }
-
 
     let user = {};
     user.userName = req.body.userName;

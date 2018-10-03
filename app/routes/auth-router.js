@@ -3,9 +3,8 @@ let bcrypt = require('bcrypt');
 let jwt = require('jsonwebtoken');
 const { Pool, } = require('pg');
 
-
 const connectionString = process.env.DB_URL;
-const Select_User= 'Select * From Users Where userName = $1';
+const Select_User = 'Select * From Users Where userName = $1';
 
 // Instantiate router
 
@@ -35,7 +34,6 @@ authRoutes.get('/token', (req, res) => {
     user.userName = req.query.userName;
     user.password = req.query.password;
 
-
     const pool = new Pool({
         connectionString: connectionString,
     });
@@ -57,9 +55,6 @@ authRoutes.get('/token', (req, res) => {
             });
         }
 
-        console.log(user.password);
-        console.log(response.rows[0].password);
-
         if(bcrypt.compare(user.password, response.rows[0].password)){
             const payload = {
                 userName: user.userName,
@@ -74,8 +69,7 @@ authRoutes.get('/token', (req, res) => {
             res.send({
                 token: token,
             });
-        }
-        else {
+        } else {
             res.status(401).send({
                 errorType: 'AuthenticationError',
                 message: 'Bad client secret.',

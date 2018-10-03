@@ -14,7 +14,6 @@ describe('auth-router', function() {
                 .get('/auth/token')
                 .query({ userName: 'testUsername', password: 'passwords', })
                 .end((err, res) => {
-                    console.log(res.body);
                     res.should.have.status(200);
                     done();
                 });
