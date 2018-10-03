@@ -113,12 +113,11 @@ describe('user-router', function() {
         it('it should succeed with correct fields ', done => {
             chai.request(index)
                 .get('/user/forgetPassword')
-                .query({ userName: 'TestUser1', })
+                .query({ userName: 'testUsername', })
                 .end((err, res) => {
-                    console.log(res.body);
                     res.should.have.status(200);
                     res.body.message.should.be.eql('Success');
-                    res.body.securityQuestion.should.be.eql('hello hint');
+                    res.body.securityQuestion.should.be.eql('what my name?');
                     done();
                 });
         });
