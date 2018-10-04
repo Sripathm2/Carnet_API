@@ -1,6 +1,6 @@
 let express = require('express');
 let bodyParser = require('body-parser');
-
+let cors = require('cors');
 // Routers
 
 let userRoutes = require('./app/routes/user-router');
@@ -10,7 +10,7 @@ let Versioning = require('express-routes-versioning');
 // Set up app
 
 let app = express();
-
+app.use(cors());
 // This middleware parses the body of the incoming requests so they are accessible by the route handlers
 
 let routesVersioning = Versioning();
