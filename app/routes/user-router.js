@@ -20,8 +20,9 @@ let userRoutes = express.Router();
 
 userRoutes.post('/register', (req, res) => {
 
-    console.log("efuhvev");
     if (!req.body.userName) {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
         return res.status(422).send({
             errorType: 'RequestFormatError',
             message: 'Must include the userName.',
