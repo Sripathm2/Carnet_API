@@ -16,11 +16,6 @@ let authRoutes = express.Router();
 
 authRoutes.get('/token', (req, res) => {
 
-    return res.status(422).send({
-        errorType: 'RequestFormatError',
-        message: 'Must include the userName.',
-    });
-    
     if (!req.query.userName) {
         return res.status(422).send({
             errorType: 'RequestFormatError',
