@@ -21,7 +21,7 @@ let userRoutes = express.Router();
 userRoutes.post('/register', (req, res) => {
 
     if (!req.body.userName) {
-        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Origin", "https://carnet-client.herokuapp.com/");
         res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
         return res.status(422).send({
             errorType: 'RequestFormatError',
