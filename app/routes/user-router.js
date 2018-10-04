@@ -20,6 +20,7 @@ let userRoutes = express.Router();
 
 userRoutes.post('/register', (req, res) => {
 
+    console.log("efuhvev");
     if (!req.body.userName) {
         return res.status(422).send({
             errorType: 'RequestFormatError',
