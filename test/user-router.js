@@ -1,6 +1,7 @@
 let chai = require('chai');
 let index = require('../index');
 let chaiHttp = require('chai-http');
+let jwt = require('jsonwebtoken');
 let should = chai.should();
 
 chai.use(chaiHttp);
@@ -216,6 +217,40 @@ describe('user-router', function() {
                     res.should.have.status(422);
                     res.body.errorType.should.be.eql('RequestFormatError');
                     res.body.message.should.be.eql('Must include the securityAnswer.');
+                    done();
+                });
+        });
+
+    });
+
+    describe('/GET getData', () => {
+
+        it('it should succeed with correct fields ', done => {
+            const payload = {
+                userName: 'testUsername',
+            };
+
+            let token;
+            token = jwt.sign(payload, process.env.secret, {
+                expiresIn: '10h',
+            });
+            chai.request(index)
+                .get('/user/getData')
+                .query({ token: token, })
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.message.should.be.eql('Success');
+                    done();
+                });
+        });
+
+        it('it should fail with no fields ', done => {
+            chai.request(index)
+                .get('/user/getData')
+                .end((err, res) => {
+                    res.should.have.status(422);
+                    res.body.errorType.should.be.eql('RequestFormatError');
+                    res.body.message.should.be.eql('Must include the token.');
                     done();
                 });
         });

@@ -1,12 +1,14 @@
 let express = require('express');
 let bcrypt = require('bcrypt');
 const { Pool, } = require('pg');
+let jwt = require('jsonwebtoken');
 
 const connectionString = process.env.DB_URL;
 const Insert_User = 'INSERT INTO Users (userName, password, email , securityQuestion, securityAnswer, ' +
     'name, notebooks) VALUES ($1, $2, $3,$4, $5, $6, $7)';
 const Select_User_Forget_Password = 'Select * From Users Where userName = $1';
 const Update_User_Forget_Password = 'Update Users Set password = $2 Where userName = $1';
+const Select_User = 'Select * From Users Where userName = $1';
 
 // Instantiate router
 
@@ -221,45 +223,56 @@ userRoutes.post('/forgetPassword', (req, res) => {
     });
 });
 
-userRoutes.get('/forgetPassword', (req, res) => {
+userRoutes.get('/getData', (req, res) => {
 
-    if (!req.query.userName) {
+    if (!req.query.token) {
         return res.status(422).send({
             errorType: 'RequestFormatError',
-            message: 'Must include the userName.',
+            message: 'Must include the token.',
         });
     }
 
-    let user = {};
-    user.userName = req.query.userName;
-
-    const pool = new Pool({
-        connectionString: connectionString,
-    });
-
-    pool.query(Select_User_Forget_Password, [user.userName, ],  (err, response) => {
-
+    jwt.verify(req.query.token, process.env.secret, function(err, decode) {
         if(err){
+            return res.send({
+                errorType: 'InvalidTokenError',
+                message: 'invalid or expired token.',
+            });
+        }
+
+        const pool = new Pool({
+            connectionString: connectionString,
+        });
+
+        pool.query(Select_User, [decode.userName, ],  (err, response) => {
+
+            if(err){
+                pool.end();
+                return res.send({
+                    errorType: 'InternalError',
+                    message: err,
+                });
+            }
+
+            if(!response.rows[0]){
+                return res.status(422).send({
+                    errorType: 'NoSuchUserError',
+                    message: 'Incorrect userName.',
+                });
+            }
+
             pool.end();
             return res.send({
-                errorType: 'InternalError',
-                message: err,
+                message: 'Success',
+                email: response.rows[0].email,
+                name: response.rows[0].name,
+                notebooks: response.rows[0].notebooks,
             });
-        }
-
-        if(!response.rows[0]){
-            return res.status(422).send({
-                errorType: 'NoSuchUserError',
-                message: 'Incorrect userName.',
-            });
-        }
-
-        pool.end();
-        return res.send({
-            message: 'Success',
-            securityQuestion: response.rows[0].securityquestion,
         });
+
     });
+
+
 });
 
 module.exports = userRoutes;
