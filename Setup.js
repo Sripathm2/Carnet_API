@@ -29,12 +29,12 @@ const notebook = new Pool({
     connectionString: connectionString,
 });
 
-const create_user_table = 'CREATE TABLE Users (userName VARCHAR(32) PRIMARY KEY, password text not null, email text not null, securityQuestion text not null, securityAnswer text not null, name text not null, notebooks text not null)';
-const insert_user = 'INSERT INTO Users (userName, password, email , securityQuestion, securityAnswer, name, notebooks) VALUES (\'testUsername\',\'$2b$10$PhtMAduAs2i0wI/Uvs6DIepGMjz2JjooKNoDZ1dbYMweuWHGbleQK\', \'test@test.com\', \'what my name?\', \'test answer\', \'test test\', \'notebooks\')';
+const create_user_table = 'CREATE TABLE Users (userName VARCHAR(32) PRIMARY KEY, password text not null, email text not null, securityQuestion text not null, securityAnswer text not null, name text not null)';
+const insert_user = 'INSERT INTO Users (userName, password, email , securityQuestion, securityAnswer, name) VALUES (\'testUsername\',\'$2b$10$PhtMAduAs2i0wI/Uvs6DIepGMjz2JjooKNoDZ1dbYMweuWHGbleQK\', \'test@test.com\', \'what my name?\', \'test answer\', \'test test\')';
 const create_feedback_table = 'CREATE TABLE Feedback (feedbackText text)';
-const create_notebook_table = 'CREATE TABLE Notebook (userName VARCHAR(32), name text not null, files text not null, subscribedBy text not null, likes NUMERIC not null, dislikes Numeric not null, uuid UUID not null)';
-const insert_notebook1 = 'INSERT INTO Notebook  (userName, name, files, subscribedBy, likes, dislikes, uuid) VALUES (\'testUsername\', \'testNotebook\', \' \' , \' \', 0, 0, \'689c0462-ca35-11e8-a8d5-f2801f1b9fd1\')';
-const insert_notebook2 = 'INSERT INTO Notebook  (userName, name, files, subscribedBy, likes, dislikes, uuid) VALUES (\'testUsername1\', \'testNotebook1\', \' \' , \' \', 0, 0, \'689c0462-ca35-11e8-a8d5-32801f1b9fd1\')';
+const create_notebook_table = 'CREATE TABLE Notebook (userName VARCHAR(32), name text not null, files text not null, subscribedBy text not null, likes NUMERIC not null, dislikes Numeric not null, uuid UUID not null, comment text not null)';
+const insert_notebook1 = 'INSERT INTO Notebook  (userName, name, files, subscribedBy, likes, dislikes, uuid, comment) VALUES (\'testUsername\', \'testNotebook\', \' \' , \' \', 0, 0, \'689c0462-ca35-11e8-a8d5-f2801f1b9fd1\', \' \')';
+const insert_notebook2 = 'INSERT INTO Notebook  (userName, name, files, subscribedBy, likes, dislikes, uuid, comment) VALUES (\'testUsername1\', \'testNotebook1\', \' \' , \' \', 0, 0, \'689c0462-ca35-11e8-a8d5-32801f1b9fd1\', \' \')';
 
 function create_user_table_function() {
     pool.query(create_user_table, (err, res) => {

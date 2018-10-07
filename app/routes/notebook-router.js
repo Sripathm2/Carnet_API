@@ -4,13 +4,14 @@ const uuidv4 = require('uuid/v4');
 let jwt = require('jsonwebtoken');
 
 const connectionString = process.env.DB_URL;
-const Insert_notebook = 'INSERT INTO Notebook  (userName, name, files, subscribedBy, likes, dislikes, uuid) VALUES ($1, $2, $3,$4, $5, $6, $7)';
+const Insert_notebook = 'INSERT INTO Notebook  (userName, name, files, subscribedBy, likes, dislikes, uuid, comment) VALUES ($1, $2, $3,$4, $5, $6, $7, $8)';
 const Update_notebook_data = 'UPDATE Notebook SET files = $1 WHERE uuid = $2 AND userName = $3';
-const Update_notebook_subscribed = 'UPDATE Notebook SET subscribedby = subscribedby + $1::text WHERE uuid = $2 ';
+const Update_notebook_subscribed = 'UPDATE Notebook SET subscribedby = $1::text WHERE uuid = $2 ';
 const Select_notebook_data = 'Select * from Notebook WHERE uuid = $1 AND userName = $2';
-const Select_notebook_userName = 'Select userName, name, uuid, likes, dislikes from Notebook where userName = $1 ';
-const Select_notebook_name = 'Select userName, name, uuid, likes, dislikes from Notebook where name = $1 ';
-const Select_notebook = 'Select userName, name, uuid, likes, dislikes from Notebook';
+const Select_notebook_userName = 'Select userName, name, uuid, likes, dislikes, comment from Notebook where userName = $1 ';
+const Select_notebook_name = 'Select userName, name, uuid, likes, dislikes, comment from Notebook where name = $1 ';
+const Select_notebook_id = 'Select userName, name, uuid, likes, dislikes, comment from Notebook where uuid = $1 ';
+const Select_notebook = 'Select userName, name, uuid, likes, dislikes, comment from Notebook';
 // Instantiate router
 
 let notebookRoutes = express.Router();
@@ -47,7 +48,7 @@ notebookRoutes.post('/createNotebook', (req, res) => {
             connectionString: connectionString,
         });
 
-        pool.query(Insert_notebook, [decode.userName, req.query.name, "", "", 0, 0, uuidv4() ],  (err, response) => {
+        pool.query(Insert_notebook, [decode.userName, req.query.name, "", "", 0, 0, uuidv4(), "" ],  (err, response) => {
 
             if(err){
                 pool.end();
@@ -208,7 +209,7 @@ notebookRoutes.post('/subscribe', (req, res) => {
             connectionString: connectionString,
         });
 
-        pool.query(Update_notebook_subscribed, [decode.userName, req.body.notebookId],  (err, response) => {
+        pool.query(Select_notebook_id, [ req.body.notebookId],  (err, response) => {
 
             if(err){
                 pool.end();
@@ -218,11 +219,32 @@ notebookRoutes.post('/subscribe', (req, res) => {
                 });
             }
 
+            let subscribed = response.rows[0].subscribedby + '--' + decode.userName;
+
             pool.end();
 
-            return res.send({
-                message: 'Success',
+
+            const pool1 = new Pool({
+                connectionString: connectionString,
             });
+
+            pool1.query(Update_notebook_subscribed, [subscribed, req.body.notebookId,],  (err, response1) => {
+
+                if(err){
+                    pool1.end();
+                    return res.send({
+                        errorType: 'InternalError',
+                        message: err,
+                    });
+                }
+
+                pool1.end();
+
+                return res.send({
+                    message: 'Success',
+                });
+            });
+
         });
 
     });

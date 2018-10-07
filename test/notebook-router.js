@@ -262,7 +262,6 @@ describe('notebook-router', function() {
                 .get('/notebook/search_name')
                 .query({token: token, name:'testNotebook'})
                 .end((err, res) => {
-                    console.log(res.body);
                     res.should.have.status(200);
                     res.body.data[0].username.should.be.eql('testUsername');
                     done();
@@ -307,7 +306,6 @@ describe('notebook-router', function() {
                 .get('/notebook/search')
                 .query({token: token})
                 .end((err, res) => {
-                    console.log(res.body);
                     res.should.have.status(200);
                     res.body.data.length.should.be.eql(3);
                     done();

@@ -5,7 +5,7 @@ let jwt = require('jsonwebtoken');
 
 const connectionString = process.env.DB_URL;
 const Insert_User = 'INSERT INTO Users (userName, password, email , securityQuestion, securityAnswer, ' +
-    'name, notebooks) VALUES ($1, $2, $3,$4, $5, $6, $7)';
+    'name) VALUES ($1, $2, $3,$4, $5, $6)';
 const Select_User_Forget_Password = 'Select * From Users Where userName = $1';
 const Update_User_Forget_Password = 'Update Users Set password = $2 Where userName = $1';
 const Select_User = 'Select * From Users Where userName = $1';
@@ -70,7 +70,7 @@ userRoutes.post('/register', (req, res) => {
         connectionString: connectionString,
     });
 
-    pool.query(Insert_User, [user.userName, user.password, user.email, user.securityQuestion, user.securityAnswer, user.name, user.notebooks, ],  (err, response) => {
+    pool.query(Insert_User, [user.userName, user.password, user.email, user.securityQuestion, user.securityAnswer, user.name, ],  (err, response) => {
 
         if(err){
             pool.end();
