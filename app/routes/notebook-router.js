@@ -5,7 +5,8 @@ let jwt = require('jsonwebtoken');
 
 const connectionString = process.env.DB_URL;
 const Insert_notebook = 'INSERT INTO Notebook  (userName, name, files, subscribedBy, likes, dislikes, uuid) VALUES ($1, $2, $3,$4, $5, $6, $7)';
-const Update_notebook = 'UPDATE Notebook SET files = $1 WHERE uuid = $2 AND userName = $3';
+const Update_notebook_data = 'UPDATE Notebook SET files = $1 WHERE uuid = $2 AND userName = $3';
+const Update_notebook_subscribed = 'UPDATE Notebook SET subscribedby = subscribedby + $1 WHERE uuid = $2 ';
 const Select_notebook_data = 'Select * from Notebook WHERE uuid = $1 AND userName = $2';
 
 // Instantiate router
@@ -100,7 +101,7 @@ notebookRoutes.post('/updateNotebook', (req, res) => {
             connectionString: connectionString,
         });
 
-        pool.query(Update_notebook, [req.body.data, req.body.notebookId, decode.userName],  (err, response) => {
+        pool.query(Update_notebook_data, [req.body.data, req.body.notebookId, decode.userName],  (err, response) => {
 
             if(err){
                 pool.end();
@@ -130,6 +131,63 @@ notebookRoutes.get('/Notebook', (req, res) => {
         });
     }
 
+    if (!req.query.notebookId) {
+        return res.status(422).send({
+            errorType: 'RequestFormatError',
+            message: 'Must include the id of the notebook.',
+        });
+    }
+
+    jwt.verify(req.query.token, process.env.secret, function(err, decode) {
+        if(err){
+            return res.send({
+                errorType: 'InvalidTokenError',
+                message: 'invalid or expired token.',
+            });
+        }
+
+        const pool = new Pool({
+            connectionString: connectionString,
+        });
+
+        pool.query(Select_notebook_data, [req.query.notebookId, decode.userName],  (err, response) => {
+
+            if(err){
+                pool.end();
+                return res.send({
+                    errorType: 'InternalError',
+                    message: err,
+                });
+            }
+
+            console.log(response);
+            if(!response.rows[0]){
+                return res.status(422).send({
+                    errorType: 'NoSuchNotebookError',
+                    message: 'Incorrect Notebook Id.',
+                });
+            }
+
+            pool.end();
+
+            return res.send({
+                data: response.rows[0].files,
+            });
+        });
+
+    });
+
+});
+
+notebookRoutes.post('/subscribe', (req, res) => {
+
+    if (!req.query.token) {
+        return res.status(422).send({
+            errorType: 'RequestFormatError',
+            message: 'Must include the token.',
+        });
+    }
+
     if (!req.body.notebookId) {
         return res.status(422).send({
             errorType: 'RequestFormatError',
@@ -149,7 +207,7 @@ notebookRoutes.get('/Notebook', (req, res) => {
             connectionString: connectionString,
         });
 
-        pool.query(Select_notebook_data, [req.body.notebookId, decode.userName],  (err, response) => {
+        pool.query(Update_notebook_subscribed, [decode.userName, req.body.notebookId],  (err, response) => {
 
             if(err){
                 pool.end();
@@ -159,17 +217,10 @@ notebookRoutes.get('/Notebook', (req, res) => {
                 });
             }
 
-            if(!response.rows[0]){
-                return res.status(422).send({
-                    errorType: 'NoSuchNotebookError',
-                    message: 'Incorrect Notebook Id.',
-                });
-            }
-
             pool.end();
 
             return res.send({
-                data: response.rows[0].files,
+                message: 'Success',
             });
         });
 
