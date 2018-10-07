@@ -55,27 +55,26 @@ authRoutes.get('/token', (req, res) => {
             });
         }
 
-        if(bcrypt.compare(user.password, response.rows[0].password)){
-            const payload = {
-                userName: user.userName,
-            };
+        bcrypt.compare(user.password, response.rows[0].password, function(err, res1) {
+            if(res1 === true){
+                const payload = {
+                    userName: user.userName,
+                };
 
-            // Tokens expire in 5 minutes.
-
-            let token;
-            token = jwt.sign(payload, process.env.secret, {
-                expiresIn: '10h',
-            });
-            res.send({
-                token: token,
-            });
-        } else {
-            res.status(401).send({
-                errorType: 'AuthenticationError',
-                message: 'Bad client secret.',
-            });
-        }
-
+                let token;
+                token = jwt.sign(payload, process.env.secret, {
+                    expiresIn: '10h',
+                });
+                res.send({
+                    token: token,
+                });
+            } else {
+                res.status(401).send({
+                    errorType: 'AuthenticationError',
+                    message: 'Bad user password.',
+                });
+            }
+        });
         pool.end();
     });
 });

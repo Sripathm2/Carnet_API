@@ -1,9 +1,11 @@
 let express = require('express');
 const { Pool, } = require('pg');
+const uuidv4 = require('uuid/v4');
 let jwt = require('jsonwebtoken');
 
 const connectionString = process.env.DB_URL;
-const Select_User = 'Select * From Users Where userName = $1';
+const Insert_notebook= 'INSERT INTO Notebook  (userName, name, files, subscribedBy, likes, dislikes, uuid) VALUES ($1, $2, $3,$4, $5, $6, $7)';
+const Update_notebook= 'UPDATE Notebook SET files = $1 WHERE uuid = $2 AND userName = $3';
 
 // Instantiate router
 
@@ -22,6 +24,13 @@ notebookRoutes.post('/createNotebook', (req, res) => {
         });
     }
 
+    if (!req.query.name) {
+        return res.status(422).send({
+            errorType: 'RequestFormatError',
+            message: 'Must include the name of the notebook.',
+        });
+    }
+
     jwt.verify(req.query.token, process.env.secret, function(err, decode) {
         if(err){
             return res.send({
@@ -34,7 +43,7 @@ notebookRoutes.post('/createNotebook', (req, res) => {
             connectionString: connectionString,
         });
 
-        pool.query(Select_User, [decode.userName, ],  (err, response) => {
+        pool.query(Insert_notebook, [decode.userName, req.query.name, "", "", 0, 0 ],  (err, response) => {
 
             if(err){
                 pool.end();
@@ -44,19 +53,66 @@ notebookRoutes.post('/createNotebook', (req, res) => {
                 });
             }
 
-            if(!response.rows[0]){
-                return res.status(422).send({
-                    errorType: 'NoSuchUserError',
-                    message: 'Incorrect userName.',
+            pool.end();
+
+            return res.send({
+                message: 'Success',
+            });
+        });
+
+    });
+
+});
+
+notebookRoutes.post('/updateNotebook', (req, res) => {
+
+    if (!req.query.token) {
+        return res.status(422).send({
+            errorType: 'RequestFormatError',
+            message: 'Must include the token.',
+        });
+    }
+
+    if (!req.body.notebookId) {
+        return res.status(422).send({
+            errorType: 'RequestFormatError',
+            message: 'Must include the id of the notebook.',
+        });
+    }
+
+    if (!req.body.data) {
+        return res.status(422).send({
+            errorType: 'RequestFormatError',
+            message: 'Must include the data.',
+        });
+    }
+
+    jwt.verify(req.query.token, process.env.secret, function(err, decode) {
+        if(err){
+            return res.send({
+                errorType: 'InvalidTokenError',
+                message: 'invalid or expired token.',
+            });
+        }
+
+        const pool = new Pool({
+            connectionString: connectionString,
+        });
+
+        pool.query(Update_notebook, [req.body.data, req.body.notebookId, decode.userName],  (err, response) => {
+
+            if(err){
+                pool.end();
+                return res.send({
+                    errorType: 'InternalError',
+                    message: err,
                 });
             }
 
             pool.end();
+
             return res.send({
                 message: 'Success',
-                email: response.rows[0].email,
-                name: response.rows[0].name,
-                notebooks: response.rows[0].notebooks,
             });
         });
 
