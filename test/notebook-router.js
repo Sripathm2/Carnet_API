@@ -51,4 +51,130 @@ describe('notebook-router', function() {
 
     });
 
+    describe('/POST updateNotebook', () => {
+
+        it('it should succeed with correct fields ', done => {
+            let data = {};
+            data.notebookId = '689c0462-ca35-11e8-a8d5-f2801f1b9fd1';
+            data.data = 'data';
+
+            const payload = {
+                userName: 'testUsername',
+            };
+            let token = jwt.sign(payload, process.env.secret, {
+                expiresIn: '10h',
+            });
+            chai.request(index)
+                .post('/notebook/updateNotebook')
+                .query({token: token})
+                .send(data)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    done();
+                });
+        });
+
+        it('it should fail with no fields ', done => {
+            chai.request(index)
+                .post('/notebook/updateNotebook')
+                .end((err, res) => {
+                    res.should.have.status(422);
+                    res.body.errorType.should.be.eql('RequestFormatError');
+                    res.body.message.should.be.eql('Must include the token.');
+                    done();
+                });
+        });
+
+        it('it should fail with no Id and data ', done => {
+            chai.request(index)
+                .post('/notebook/updateNotebook')
+                .query({token: 'sdafswdd'})
+                .end((err, res) => {
+                    res.should.have.status(422);
+                    res.body.errorType.should.be.eql('RequestFormatError');
+                    res.body.message.should.be.eql('Must include the id of the notebook.');
+                    done();
+                });
+        });
+
+        it('it should fail with no data ', done => {
+            let incompletedata = {};
+            incompletedata.notebookId = 'nhsdocnh';
+            chai.request(index)
+                .post('/notebook/updateNotebook')
+                .query({token: 'sdafswdd'})
+                .send(incompletedata)
+                .end((err, res) => {
+                    res.should.have.status(422);
+                    res.body.errorType.should.be.eql('RequestFormatError');
+                    res.body.message.should.be.eql('Must include the data.');
+                    done();
+                });
+        });
+
+    });
+
+    describe('/POST updateNotebook', () => {
+
+        it('it should succeed with correct fields ', done => {
+            let data = {};
+            data.notebookId = '689c0462-ca35-11e8-a8d5-f2801f1b9fd1';
+            data.data = 'data';
+
+            const payload = {
+                userName: 'testUsername',
+            };
+            let token = jwt.sign(payload, process.env.secret, {
+                expiresIn: '10h',
+            });
+            chai.request(index)
+                .post('/notebook/updateNotebook')
+                .query({token: token})
+                .send(data)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    done();
+                });
+        });
+
+        it('it should fail with no fields ', done => {
+            chai.request(index)
+                .post('/notebook/updateNotebook')
+                .end((err, res) => {
+                    res.should.have.status(422);
+                    res.body.errorType.should.be.eql('RequestFormatError');
+                    res.body.message.should.be.eql('Must include the token.');
+                    done();
+                });
+        });
+
+        it('it should fail with no Id and data ', done => {
+            chai.request(index)
+                .post('/notebook/updateNotebook')
+                .query({token: 'sdafswdd'})
+                .end((err, res) => {
+                    res.should.have.status(422);
+                    res.body.errorType.should.be.eql('RequestFormatError');
+                    res.body.message.should.be.eql('Must include the id of the notebook.');
+                    done();
+                });
+        });
+
+        it('it should fail with no data ', done => {
+            let incompletedata = {};
+            incompletedata.notebookId = 'nhsdocnh';
+            chai.request(index)
+                .post('/notebook/updateNotebook')
+                .query({token: 'sdafswdd'})
+                .send(incompletedata)
+                .end((err, res) => {
+                    res.should.have.status(422);
+                    res.body.errorType.should.be.eql('RequestFormatError');
+                    res.body.message.should.be.eql('Must include the data.');
+                    done();
+                });
+        });
+
+    });
+
 });
