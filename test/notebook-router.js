@@ -127,7 +127,6 @@ describe('notebook-router', function() {
                 .get('/notebook/Notebook')
                 .query({token: token, notebookId:'689c0462-ca35-11e8-a8d5-f2801f1b9fd1'})
                 .end((err, res) => {
-                    console.log(res.body);
                     res.should.have.status(200);
                     res.body.data.should.be.eql('data');
                     done();

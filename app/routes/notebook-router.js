@@ -159,8 +159,7 @@ notebookRoutes.get('/Notebook', (req, res) => {
                     message: err,
                 });
             }
-
-            console.log(response);
+            
             if(!response.rows[0]){
                 return res.status(422).send({
                     errorType: 'NoSuchNotebookError',
