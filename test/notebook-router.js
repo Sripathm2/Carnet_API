@@ -205,4 +205,115 @@ describe('notebook-router', function() {
 
     });
 
+    describe('/GET Search_userName', () => {
+
+        it('it should succeed with correct field name ', done => {
+            const payload = {
+                userName: 'testUsername',
+            };
+            let token = jwt.sign(payload, process.env.secret, {
+                expiresIn: '10h',
+            });
+            chai.request(index)
+                .get('/notebook/search_userName')
+                .query({token: token, userName:'testUsername1'})
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.data[0].name.should.be.eql('testNotebook1');
+                    done();
+                });
+        });
+
+        it('it should fail with no fields ', done => {
+            chai.request(index)
+                .get('/notebook/search_userName')
+                .end((err, res) => {
+                    res.should.have.status(422);
+                    res.body.errorType.should.be.eql('RequestFormatError');
+                    res.body.message.should.be.eql('Must include the token.');
+                    done();
+                });
+        });
+
+        it('it should fail with no userName', done => {
+            chai.request(index)
+                .get('/notebook/search_userName')
+                .query({token: 'sdafswdd'})
+                .end((err, res) => {
+                    res.should.have.status(422);
+                    res.body.errorType.should.be.eql('RequestFormatError');
+                    res.body.message.should.be.eql('Must include the userName.');
+                    done();
+                });
+        });
+
+    });
+
+    describe('/GET Search_name', () => {
+
+        it('it should succeed with correct field name ', done => {
+            const payload = {
+                userName: 'testUsername',
+            };
+            let token = jwt.sign(payload, process.env.secret, {
+                expiresIn: '10h',
+            });
+            chai.request(index)
+                .get('/notebook/search_name')
+                .query({token: token, name:'testNotebook'})
+                .end((err, res) => {
+                    console.log(res.body);
+                    res.should.have.status(200);
+                    res.body.data[0].username.should.be.eql('testUsername');
+                    done();
+                });
+        });
+
+        it('it should fail with no fields ', done => {
+            chai.request(index)
+                .get('/notebook/search_name')
+                .end((err, res) => {
+                    res.should.have.status(422);
+                    res.body.errorType.should.be.eql('RequestFormatError');
+                    res.body.message.should.be.eql('Must include the token.');
+                    done();
+                });
+        });
+
+        it('it should fail with no userName', done => {
+            chai.request(index)
+                .get('/notebook/search_name')
+                .query({token: 'sdafswdd'})
+                .end((err, res) => {
+                    res.should.have.status(422);
+                    res.body.errorType.should.be.eql('RequestFormatError');
+                    res.body.message.should.be.eql('Must include the name.');
+                    done();
+                });
+        });
+
+    });
+
+    describe('/GET Search', () => {
+
+        it('it should succeed with correct field ', done => {
+            const payload = {
+                userName: 'testUsername',
+            };
+            let token = jwt.sign(payload, process.env.secret, {
+                expiresIn: '10h',
+            });
+            chai.request(index)
+                .get('/notebook/search')
+                .query({token: token})
+                .end((err, res) => {
+                    console.log(res.body);
+                    res.should.have.status(200);
+                    res.body.data.length.should.be.eql(3);
+                    done();
+                });
+        });
+
+    });
+
 });
