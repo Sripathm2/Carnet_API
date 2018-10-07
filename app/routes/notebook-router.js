@@ -6,11 +6,12 @@ let jwt = require('jsonwebtoken');
 const connectionString = process.env.DB_URL;
 const Insert_notebook = 'INSERT INTO Notebook  (userName, name, files, subscribedBy, likes, dislikes, uuid, comment) VALUES ($1, $2, $3,$4, $5, $6, $7, $8)';
 const Update_notebook_data = 'UPDATE Notebook SET files = $1 WHERE uuid = $2 AND userName = $3';
+const Update_notebook_comment = 'UPDATE Notebook SET likes = $1::numeric, dislikes = $2::numeric, comment = $3 WHERE uuid = $4 AND userName = $5';
 const Update_notebook_subscribed = 'UPDATE Notebook SET subscribedby = $1::text WHERE uuid = $2 ';
 const Select_notebook_data = 'Select * from Notebook WHERE uuid = $1 AND userName = $2';
 const Select_notebook_userName = 'Select userName, name, uuid, likes, dislikes, comment from Notebook where userName = $1 ';
 const Select_notebook_name = 'Select userName, name, uuid, likes, dislikes, comment from Notebook where name = $1 ';
-const Select_notebook_id = 'Select userName, name, uuid, likes, dislikes, comment from Notebook where uuid = $1 ';
+const Select_notebook_id = 'Select * from Notebook where uuid = $1 ';
 const Select_notebook = 'Select userName, name, uuid, likes, dislikes, comment from Notebook';
 // Instantiate router
 
@@ -403,8 +404,101 @@ notebookRoutes.get('/search', (req, res) => {
 
             pool.end();
 
+            console.log(response.rows);
+
             return res.send({
                 data: response.rows,
+            });
+        });
+
+    });
+
+});
+
+notebookRoutes.post('/update', (req, res) => {
+
+    if (!req.query.token) {
+        return res.status(422).send({
+            errorType: 'RequestFormatError',
+            message: 'Must include the token.',
+        });
+    }
+
+    if (!req.body.notebookId) {
+        return res.status(422).send({
+            errorType: 'RequestFormatError',
+            message: 'Must include the id of the notebook.',
+        });
+    }
+
+    if (!req.body.like) {
+        return res.status(422).send({
+            errorType: 'RequestFormatError',
+            message: 'Must include the like.',
+        });
+    }
+
+    if (!req.body.dislike) {
+        return res.status(422).send({
+            errorType: 'RequestFormatError',
+            message: 'Must include the dislike.',
+        });
+    }
+
+    if (!req.body.comment) {
+        return res.status(422).send({
+            errorType: 'RequestFormatError',
+            message: 'Must include the comment.',
+        });
+    }
+
+    jwt.verify(req.query.token, process.env.secret, function(err, decode) {
+        if(err){
+            return res.send({
+                errorType: 'InvalidTokenError',
+                message: 'invalid or expired token.',
+            });
+        }
+
+        const pool = new Pool({
+            connectionString: connectionString,
+        });
+
+        pool.query(Select_notebook_id, [req.body.notebookId],  (err, response) => {
+
+            if(err){
+                pool.end();
+                return res.send({
+                    errorType: 'InternalError',
+                    message: err,
+                });
+            }
+
+            pool.end();
+
+            let data = {};
+            data.like = response.rows[0].likes + parseInt(req.body.like);
+            data.dislike = response.rows[0].dislikes + parseInt(req.body.dislike);
+            data.comment = response.rows[0].comment + '--' + decode.userName + ' : ' + req.body.comment;
+
+            const pool1 = new Pool({
+                connectionString: connectionString,
+            });
+
+            pool1.query(Update_notebook_comment, [data.like, data.dislike, data.comment, req.body.notebookId, decode.userName],  (err, response) => {
+                if(err){
+                    pool1.end();
+                    return res.send({
+                        errorType: 'InternalError',
+                        message: err,
+                    });
+                }
+
+                pool1.end();
+
+                return res.send({
+                    message: 'Success',
+                });
             });
         });
 
