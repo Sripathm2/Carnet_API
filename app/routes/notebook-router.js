@@ -13,6 +13,8 @@ const Select_notebook_userName = 'Select userName, name, uuid, likes, dislikes, 
 const Select_notebook_name = 'Select userName, name, uuid, likes, dislikes, comment from Notebook where name = $1 ';
 const Select_notebook_id = 'Select * from Notebook where uuid = $1 ';
 const Select_notebook = 'Select userName, name, uuid, likes, dislikes, comment from Notebook';
+const Select_user = 'Select * from Users where userName = $1';
+const Update_user = 'UPDATE Users SET notification = $1::text WHERE userName = $2 ';
 // Instantiate router
 
 let notebookRoutes = express.Router();
@@ -116,6 +118,8 @@ notebookRoutes.post('/updateNotebook', (req, res) => {
             }
 
             pool.end();
+
+            updateAll(req.body.notebookId);
 
             return res.send({
                 message: 'Success',
@@ -403,9 +407,6 @@ notebookRoutes.get('/search', (req, res) => {
             }
 
             pool.end();
-
-            console.log(response.rows);
-
             return res.send({
                 data: response.rows,
             });
@@ -507,3 +508,48 @@ notebookRoutes.post('/update', (req, res) => {
 });
 
 module.exports = notebookRoutes;
+
+function updateAll(notebookID, notebookName){
+    const pool = new Pool({
+        connectionString: connectionString,
+    });
+
+    pool.query(Select_notebook_id, [notebookID],  (err, response) => {
+
+        if(err){
+            pool.end();
+            return res.send({
+                errorType: 'InternalError',
+                message: err,
+            });
+        }
+
+        let arr = response.rows[0].subscribedby.split("--");
+
+        pool.end();
+
+        for(let i=0;i<arr.length;i++) {
+            const pool1 = new Pool({
+                connectionString: connectionString,
+            });
+
+            pool1.query(Select_user, [arr[i],], (err, response1) => {
+
+                const pool2 = new Pool({
+                    connectionString: connectionString,
+                });
+
+                if(!response1.rows[0]){
+                    return;
+                }
+                let data = response1.rows[0].notification +  '--' + notebookName;
+
+                pool2.query(Update_user, [arr[i], data], (err, response2) => {pool2.end();});
+                pool1.end();
+
+            });
+        }
+
+    });
+
+}
