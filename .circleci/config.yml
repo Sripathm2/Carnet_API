@@ -8,7 +8,7 @@ jobs:
     docker:
       # specify the version you desire here
       - image: circleci/node:latest
-      - image: circleci/postgres:9.6.2-alpine
+      - image: postgres:9.4.1
         environment:
           POSTGRES_USER: CarnetUser
           POSTGRES_PASSWORD: CarnetPassword
@@ -33,7 +33,4 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
-      - run: dockerize -wait tcp://localhost:5432 -timeout 1m
-
-      # run tests!
-      - run: npm test
+      - run: node Setup.js && mocha && eslint ~/repo

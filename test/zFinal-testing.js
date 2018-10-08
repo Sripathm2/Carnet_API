@@ -9,7 +9,7 @@ chai.use(chaiHttp);
 describe('final testing', function() {
 
     describe('Final  check', () => {
-        it('it should succeed with correct field ', done => {
+        it('it should succeed with correct fields in notebooks ', done => {
             const payload = {
                 userName: 'testUsername',
             };
@@ -38,6 +38,23 @@ describe('final testing', function() {
                     res.body.data[2].likes.should.be.eql('10');
                     res.body.data[2].dislikes.should.be.eql('11');
                     res.body.data[2].comment.should.be.eql(' --testUsername : test comment');
+                    done();
+                });
+        });
+
+        it('it should succeed with correct field in users', done => {
+            const payload = {
+                userName: 'testUsername',
+            };
+            let token = jwt.sign(payload, process.env.secret, {
+                expiresIn: '10h',
+            });
+            chai.request(index)
+                .get('/user/getData')
+                .query({token: token})
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    console.log(res.body);
                     done();
                 });
         });
