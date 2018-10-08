@@ -27,7 +27,7 @@ feedbackRoutes.post('/', (req, res) => {
         connectionString: connectionString,
     });
 
-    pool.query(Insert_feedback, [feedback.text ],  (err, response) => {
+    pool.query(Insert_feedback, [feedback.text, ],  (err, response) => {
 
         if(err){
             pool.end();

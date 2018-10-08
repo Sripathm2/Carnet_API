@@ -1,6 +1,7 @@
 let express = require('express');
 let bodyParser = require('body-parser');
 let cors = require('cors');
+
 // Routers
 
 let userRoutes = require('./app/routes/user-router');
@@ -13,6 +14,7 @@ let Versioning = require('express-routes-versioning');
 
 let app = express();
 app.use(cors());
+
 // This middleware parses the body of the incoming requests so they are accessible by the route handlers
 
 let routesVersioning = Versioning();
@@ -46,7 +48,6 @@ app.use('/feedback', routesVersioning({
 app.use('/notebook', routesVersioning({
     '1.0.0': notebookRoutes,
 }));
-
 
 // Go with Heroku's env port number or your own
 

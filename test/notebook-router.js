@@ -19,7 +19,7 @@ describe('notebook-router', function() {
             });
             chai.request(index)
                 .post('/notebook/createNotebook')
-                .query({name:'notebook name', token: token})
+                .query( { name:'notebook name', token: token, })
                 .end((err, res) => {
                     res.should.have.status(200);
                     done();
@@ -40,7 +40,7 @@ describe('notebook-router', function() {
         it('it should fail with no name ', done => {
             chai.request(index)
                 .post('/notebook/createNotebook')
-                .query({token: 'sdafswdd'})
+                .query({ token: 'sdafswdd', })
                 .end((err, res) => {
                     res.should.have.status(422);
                     res.body.errorType.should.be.eql('RequestFormatError');
@@ -65,7 +65,7 @@ describe('notebook-router', function() {
             });
             chai.request(index)
                 .post('/notebook/subscribe')
-                .query({token: token})
+                .query({ token: token, })
                 .send(data)
                 .end((err, res) => {
                     res.should.have.status(200);
@@ -87,7 +87,7 @@ describe('notebook-router', function() {
         it('it should fail with no Id ', done => {
             chai.request(index)
                 .post('/notebook/subscribe')
-                .query({token: 'sdafswdd'})
+                .query({ token: 'sdafswdd', })
                 .end((err, res) => {
                     res.should.have.status(422);
                     res.body.errorType.should.be.eql('RequestFormatError');
@@ -113,7 +113,7 @@ describe('notebook-router', function() {
             });
             chai.request(index)
                 .post('/notebook/updateNotebook')
-                .query({token: token})
+                .query({ token: token, })
                 .send(data)
                 .end((err, res) => {
                     res.should.have.status(200);
@@ -135,7 +135,7 @@ describe('notebook-router', function() {
         it('it should fail with no Id and data ', done => {
             chai.request(index)
                 .post('/notebook/updateNotebook')
-                .query({token: 'sdafswdd'})
+                .query({ token: 'sdafswdd', })
                 .end((err, res) => {
                     res.should.have.status(422);
                     res.body.errorType.should.be.eql('RequestFormatError');
@@ -149,7 +149,7 @@ describe('notebook-router', function() {
             incompletedata.notebookId = 'nhsdocnh';
             chai.request(index)
                 .post('/notebook/updateNotebook')
-                .query({token: 'sdafswdd'})
+                .query({ token: 'sdafswdd', })
                 .send(incompletedata)
                 .end((err, res) => {
                     res.should.have.status(422);
@@ -172,7 +172,7 @@ describe('notebook-router', function() {
             });
             chai.request(index)
                 .get('/notebook/Notebook')
-                .query({token: token, notebookId:'689c0462-ca35-11e8-a8d5-f2801f1b9fd1'})
+                .query({ token: token, notebookId:'689c0462-ca35-11e8-a8d5-f2801f1b9fd1', })
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.data.should.be.eql('data');
@@ -194,7 +194,7 @@ describe('notebook-router', function() {
         it('it should fail with no ID', done => {
             chai.request(index)
                 .get('/notebook/Notebook')
-                .query({token: 'sdafswdd'})
+                .query({ token: 'sdafswdd', })
                 .end((err, res) => {
                     res.should.have.status(422);
                     res.body.errorType.should.be.eql('RequestFormatError');
@@ -216,7 +216,7 @@ describe('notebook-router', function() {
             });
             chai.request(index)
                 .get('/notebook/search_userName')
-                .query({token: token, userName:'testUsername1'})
+                .query({ token: token, userName:'testUsername1', })
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.data[0].name.should.be.eql('testNotebook1');
@@ -238,7 +238,7 @@ describe('notebook-router', function() {
         it('it should fail with no userName', done => {
             chai.request(index)
                 .get('/notebook/search_userName')
-                .query({token: 'sdafswdd'})
+                .query({ token: 'sdafswdd', })
                 .end((err, res) => {
                     res.should.have.status(422);
                     res.body.errorType.should.be.eql('RequestFormatError');
@@ -260,7 +260,7 @@ describe('notebook-router', function() {
             });
             chai.request(index)
                 .get('/notebook/search_name')
-                .query({token: token, name:'testNotebook'})
+                .query({ token: token, name:'testNotebook', })
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.data[0].username.should.be.eql('testUsername');
@@ -282,7 +282,7 @@ describe('notebook-router', function() {
         it('it should fail with no userName', done => {
             chai.request(index)
                 .get('/notebook/search_name')
-                .query({token: 'sdafswdd'})
+                .query({ token: 'sdafswdd', })
                 .end((err, res) => {
                     res.should.have.status(422);
                     res.body.errorType.should.be.eql('RequestFormatError');
@@ -304,7 +304,7 @@ describe('notebook-router', function() {
             });
             chai.request(index)
                 .get('/notebook/search')
-                .query({token: token})
+                .query({ token: token, })
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.data.length.should.be.eql(3);
@@ -331,7 +331,7 @@ describe('notebook-router', function() {
             });
             chai.request(index)
                 .post('/notebook/update')
-                .query({token: token})
+                .query({ token: token, })
                 .send(data)
                 .end((err, res) => {
                     res.should.have.status(200);

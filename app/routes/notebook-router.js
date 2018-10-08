@@ -15,6 +15,7 @@ const Select_notebook_id = 'Select * from Notebook where uuid = $1 ';
 const Select_notebook = 'Select userName, name, uuid, likes, dislikes, comment from Notebook';
 const Select_user = 'Select * from Users where userName = $1';
 const Update_user = 'UPDATE Users SET notification = $1::text WHERE userName = $2 ';
+
 // Instantiate router
 
 let notebookRoutes = express.Router();
@@ -51,7 +52,7 @@ notebookRoutes.post('/createNotebook', (req, res) => {
             connectionString: connectionString,
         });
 
-        pool.query(Insert_notebook, [decode.userName, req.query.name, "", "", 0, 0, uuidv4(), "" ],  (err, response) => {
+        pool.query(Insert_notebook, [decode.userName, req.query.name, '', '', 0, 0, uuidv4(), '', ],  (err, response) => {
 
             if(err){
                 pool.end();
@@ -107,7 +108,7 @@ notebookRoutes.post('/updateNotebook', (req, res) => {
             connectionString: connectionString,
         });
 
-        pool.query(Update_notebook_data, [req.body.data, req.body.notebookId, decode.userName],  (err, response) => {
+        pool.query(Update_notebook_data, [req.body.data, req.body.notebookId, decode.userName, ],  (err, response) => {
 
             if(err){
                 pool.end();
@@ -158,7 +159,7 @@ notebookRoutes.get('/Notebook', (req, res) => {
             connectionString: connectionString,
         });
 
-        pool.query(Select_notebook_data, [req.query.notebookId, decode.userName],  (err, response) => {
+        pool.query(Select_notebook_data, [req.query.notebookId, decode.userName, ],  (err, response) => {
 
             if(err){
                 pool.end();
@@ -214,7 +215,7 @@ notebookRoutes.post('/subscribe', (req, res) => {
             connectionString: connectionString,
         });
 
-        pool.query(Select_notebook_id, [ req.body.notebookId],  (err, response) => {
+        pool.query(Select_notebook_id, [req.body.notebookId, ],  (err, response) => {
 
             if(err){
                 pool.end();
@@ -228,12 +229,11 @@ notebookRoutes.post('/subscribe', (req, res) => {
 
             pool.end();
 
-
             const pool1 = new Pool({
                 connectionString: connectionString,
             });
 
-            pool1.query(Update_notebook_subscribed, [subscribed, req.body.notebookId,],  (err, response1) => {
+            pool1.query(Update_notebook_subscribed, [subscribed, req.body.notebookId, ],  (err, response1) => {
 
                 if(err){
                     pool1.end();
@@ -284,7 +284,7 @@ notebookRoutes.get('/search_userName', (req, res) => {
             connectionString: connectionString,
         });
 
-        pool.query(Select_notebook_userName, [req.query.userName,],  (err, response) => {
+        pool.query(Select_notebook_userName, [req.query.userName, ],  (err, response) => {
 
             if(err){
                 pool.end();
@@ -340,7 +340,7 @@ notebookRoutes.get('/search_name', (req, res) => {
             connectionString: connectionString,
         });
 
-        pool.query(Select_notebook_name, [req.query.name,],  (err, response) => {
+        pool.query(Select_notebook_name, [req.query.name, ],  (err, response) => {
 
             if(err){
                 pool.end();
@@ -465,7 +465,7 @@ notebookRoutes.post('/update', (req, res) => {
             connectionString: connectionString,
         });
 
-        pool.query(Select_notebook_id, [req.body.notebookId],  (err, response) => {
+        pool.query(Select_notebook_id, [req.body.notebookId, ],  (err, response) => {
 
             if(err){
                 pool.end();
@@ -486,7 +486,7 @@ notebookRoutes.post('/update', (req, res) => {
                 connectionString: connectionString,
             });
 
-            pool1.query(Update_notebook_comment, [data.like, data.dislike, data.comment, req.body.notebookId, decode.userName],  (err, response) => {
+            pool1.query(Update_notebook_comment, [data.like, data.dislike, data.comment, req.body.notebookId, decode.userName, ],  (err, response) => {
                 if(err){
                     pool1.end();
                     return res.send({
@@ -514,7 +514,7 @@ function updateAll(notebookID, notebookName){
         connectionString: connectionString,
     });
 
-    pool.query(Select_notebook_id, [notebookID],  (err, response) => {
+    pool.query(Select_notebook_id, [notebookID, ],  (err, response) => {
 
         if(err){
             pool.end();
@@ -524,16 +524,16 @@ function updateAll(notebookID, notebookName){
             });
         }
 
-        let arr = response.rows[0].subscribedby.split("--");
+        let arr = response.rows[0].subscribedby.split('--');
 
         pool.end();
 
-        for(let i=0;i<arr.length;i++) {
+        for(let i = 0;i < arr.length; i++) {
             const pool1 = new Pool({
                 connectionString: connectionString,
             });
 
-            pool1.query(Select_user, [arr[i],], (err, response1) => {
+            pool1.query(Select_user, [arr[i], ], (err, response1) => {
 
                 const pool2 = new Pool({
                     connectionString: connectionString,
@@ -544,7 +544,10 @@ function updateAll(notebookID, notebookName){
                 }
                 let data = response1.rows[0].notification +  '--' + notebookName;
 
-                pool2.query(Update_user, [arr[i], data], (err, response2) => {pool2.end();});
+                pool2.query(Update_user, [arr[i], data, ], (err, response2) => {
+                    pool2.end();
+                });
+
                 pool1.end();
 
             });
