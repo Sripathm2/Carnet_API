@@ -54,7 +54,6 @@ describe('final testing', function() {
                 .query({token: token})
                 .end((err, res) => {
                     res.should.have.status(200);
-                    console.log(res.body);
                     done();
                 });
         });
