@@ -19,7 +19,7 @@ describe('notebook-router', function() {
             });
             chai.request(index)
                 .post('/notebook/createNotebook')
-                .query( { name:'notebook name', token: token, })
+                .query( { name: 'notebook name', token: token, })
                 .end((err, res) => {
                     res.should.have.status(200);
                     done();
@@ -172,7 +172,7 @@ describe('notebook-router', function() {
             });
             chai.request(index)
                 .get('/notebook/Notebook')
-                .query({ token: token, notebookId:'689c0462-ca35-11e8-a8d5-f2801f1b9fd1', })
+                .query({ token: token, notebookId: '689c0462-ca35-11e8-a8d5-f2801f1b9fd1', })
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.data.should.be.eql('data');
@@ -216,7 +216,7 @@ describe('notebook-router', function() {
             });
             chai.request(index)
                 .get('/notebook/search_userName')
-                .query({ token: token, userName:'testUsername1', })
+                .query({ token: token, userName: 'testUsername1', })
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.data[0].name.should.be.eql('testNotebook1');
@@ -260,7 +260,7 @@ describe('notebook-router', function() {
             });
             chai.request(index)
                 .get('/notebook/search_name')
-                .query({ token: token, name:'testNotebook', })
+                .query({ token: token, name: 'testNotebook', })
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.data[0].username.should.be.eql('testUsername');

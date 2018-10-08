@@ -51,7 +51,7 @@ describe('final testing', function() {
             });
             chai.request(index)
                 .get('/user/getData')
-                .query( {token: token, })
+                .query({ token: token, })
                 .end((err, res) => {
                     res.should.have.status(200);
                     done();
