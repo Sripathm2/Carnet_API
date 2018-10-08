@@ -1,0 +1,25 @@
+#newbg {
+	background-image: url("../img/landing.jpg");
+    /* Full height */
+    height: 100%; 
+
+    
+    /* Center and scale the image nicely */
+/*    background-position: center;
+*/    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#landing{
+	padding-top: 15%;
+}
+
+#about{
+	margin-top: 20%;
+	
+}
+
+#aboutp{
+	text-align: center;
+	align-content: center;
+}
