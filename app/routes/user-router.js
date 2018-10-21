@@ -6,6 +6,7 @@ let validator = require('email-validator');
 let passwordValidator = require('password-validator');
 
 //The SQL statements used.
+
 const connectionString = process.env.DB_URL;
 const Insert_User = 'INSERT INTO Users (userName, password, email , securityQuestion, securityAnswer, ' +
     'name, notification) VALUES ($1, $2, $3,$4, $5, $6, $7)';
