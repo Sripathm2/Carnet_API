@@ -153,7 +153,7 @@ userRoutes.post('/register', (req, res) => {
  *
  * @apiQuery (query) {String} userName of the user.
  *
- * @apiSuccess {String} Success.
+ * @apiSuccess {String} securityQuestion for that user.
  * @apiError (RequestFormatError) 422 For missing data or invalid email, password or userName.
  * @apiError (Internal Error) 500+ Internal Error.
  */
@@ -327,7 +327,7 @@ userRoutes.post('/forgetPassword', (req, res) => {
  *
  * @apiQuery (query) {String} token of the user login.
  *
- * @apiSuccess {String} Success.
+ * @apiSuccess {String} data about the user.
  * @apiError (RequestFormatError) 422 For missing data.
  * @apiError (Internal Error) 500+ Internal Error.
  */

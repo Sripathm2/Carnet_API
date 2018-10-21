@@ -21,15 +21,15 @@ const Update_user = 'UPDATE Users SET notification = $1::text WHERE userName = $
 let notebookRoutes = express.Router();
 
 /**
- * @api {post} /createNotebook
+ * @api {post} /notebook/createNotebook createNotebook
  * @apiName createNotebook
  * @apiGroup notebook
  *
- * @apiQuery (body) {String} userName of the user.
- *                  {String} password of the user.
+ * @apiParam (query) {String} token token for user authentication and authorization.
+ * @apiParam (query) {String} name of the user.
  *
  * @apiSuccess {String} Success.
- * @apiError (RequestFormatError) 422 For missing data or invalid password or userName.
+ * @apiError (RequestFormatError) 422 For missing data or invalid values.
  * @apiError (Internal Error) 500+ Internal Error.
  */
 
@@ -81,6 +81,20 @@ notebookRoutes.post('/createNotebook', (req, res) => {
     });
 
 });
+
+/**
+ * @api {post} /notebook/updateNotebook updateNotebook
+ * @apiName updateNotebook
+ * @apiGroup notebook
+ *
+ * @apiParam (query) {String} token token for user authentication and authorization.
+ * @apiParam (body) {String} notebookId of the user.
+ * @apiParam (body) {String} data of the user.
+ *
+ * @apiSuccess {String} Success.
+ * @apiError (RequestFormatError) 422 For missing data or invalid values.
+ * @apiError (Internal Error) 500+ Internal Error.
+ */
 
 notebookRoutes.post('/updateNotebook', (req, res) => {
 
@@ -140,6 +154,19 @@ notebookRoutes.post('/updateNotebook', (req, res) => {
 
 });
 
+/**
+ * @api {get} /notebook/Notebook Notebook
+ * @apiName Notebook
+ * @apiGroup notebook
+ *
+ * @apiParam (query) {String} token token for user authentication and authorization.
+ * @apiParam (query) {String} notebookId of the user.
+ *
+ * @apiSuccess {String} Notebook data.
+ * @apiError (RequestFormatError) 422 For missing data or invalid values.
+ * @apiError (Internal Error) 500+ Internal Error.
+ */
+
 notebookRoutes.get('/Notebook', (req, res) => {
 
     if (!req.query.token) {
@@ -195,6 +222,19 @@ notebookRoutes.get('/Notebook', (req, res) => {
     });
 
 });
+
+/**
+ * @api {post} /notebook/subscribe subscribe
+ * @apiName subscribe
+ * @apiGroup notebook
+ *
+ * @apiParam (query) {String} token token for user authentication and authorization.
+ * @apiParam (body) {String} notebookId of the user.
+ *
+ * @apiSuccess {String} Success.
+ * @apiError (RequestFormatError) 422 For missing data or invalid values.
+ * @apiError (Internal Error) 500+ Internal Error.
+ */
 
 notebookRoutes.post('/subscribe', (req, res) => {
 
@@ -265,6 +305,19 @@ notebookRoutes.post('/subscribe', (req, res) => {
 
 });
 
+/**
+ * @api {get} /notebook/search_userName search_userName
+ * @apiName search_userName
+ * @apiGroup notebook
+ *
+ * @apiParam (query) {String} token token for user authentication and authorization.
+ * @apiParam (query) {String} userName of the user to search for.
+ *
+ * @apiSuccess {String} list of notebooks for that user.
+ * @apiError (RequestFormatError) 422 For missing data or invalid values.
+ * @apiError (Internal Error) 500+ Internal Error.
+ */
+
 notebookRoutes.get('/search_userName', (req, res) => {
 
     if (!req.query.token) {
@@ -320,6 +373,19 @@ notebookRoutes.get('/search_userName', (req, res) => {
     });
 
 });
+
+/**
+ * @api {get} /notebook/search_name search_name
+ * @apiName search_name
+ * @apiGroup notebook
+ *
+ * @apiParam (query) {String} token token for user authentication and authorization.
+ * @apiParam (query) {String} name of the notebook to search for.
+ *
+ * @apiSuccess {String} list of notebooks for that name.
+ * @apiError (RequestFormatError) 422 For missing data or invalid values.
+ * @apiError (Internal Error) 500+ Internal Error.
+ */
 
 notebookRoutes.get('/search_name', (req, res) => {
 
@@ -377,6 +443,18 @@ notebookRoutes.get('/search_name', (req, res) => {
 
 });
 
+/**
+ * @api {get} /notebook/search search
+ * @apiName search
+ * @apiGroup notebook
+ *
+ * @apiParam (query) {String} token token for user authentication and authorization.
+ *
+ * @apiSuccess {String} list of notebooks.
+ * @apiError (RequestFormatError) 422 For missing data or invalid values.
+ * @apiError (Internal Error) 500+ Internal Error.
+ */
+
 notebookRoutes.get('/search', (req, res) => {
 
     if (!req.query.token) {
@@ -424,6 +502,22 @@ notebookRoutes.get('/search', (req, res) => {
     });
 
 });
+
+/**
+ * @api {post} /notebook/update update
+ * @apiName update
+ * @apiGroup notebook
+ *
+ * @apiParam (query) {String} token token for user authentication and authorization.
+ * @apiParam (body) {String} notebookId of the user.
+ * @apiParam (body) {String} likes of the user.
+ * @apiParam (body) {String} dislikes of the user.
+ * @apiParam (body) {String} comment of the user.
+ *
+ * @apiSuccess {String} Success.
+ * @apiError (RequestFormatError) 422 For missing data or invalid values.
+ * @apiError (Internal Error) 500+ Internal Error.
+ */
 
 notebookRoutes.post('/update', (req, res) => {
 

@@ -18,7 +18,7 @@ let authRoutes = express.Router();
  * @apiQuery (body) {String} userName of the user.
  *                  {String} password of the user.
  *
- * @apiSuccess {String} Success.
+ * @apiSuccess {String} token for the user.
  * @apiError (RequestFormatError) 422 For missing data or invalid password or userName.
  * @apiError (Internal Error) 500+ Internal Error.
  */
