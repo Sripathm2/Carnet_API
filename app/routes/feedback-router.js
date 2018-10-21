@@ -22,6 +22,7 @@ let feedbackRoutes = express.Router();
  * @apiError (RequestFormatError) 422 For missing data or invalid email, password or userName.
  * @apiError (Internal Error) 500+ Internal Error.
  */
+
 feedbackRoutes.post('/', (req, res) => {
 
     if (!req.body.feedbackText) {

@@ -43,6 +43,7 @@ let userRoutes = express.Router();
  * @apiError (RequestFormatError) 422 For missing data or invalid email, password or userName.
  * @apiError (Internal Error) 500+ Internal Error.
  */
+
 userRoutes.post('/register', (req, res) => {
 
     if (!req.body.userName) {
@@ -155,6 +156,7 @@ userRoutes.post('/register', (req, res) => {
  * @apiError (RequestFormatError) 422 For missing data or invalid email, password or userName.
  * @apiError (Internal Error) 500+ Internal Error.
  */
+
 userRoutes.get('/forgetPassword', (req, res) => {
 
     if (!req.query.userName) {
@@ -221,6 +223,7 @@ userRoutes.get('/forgetPassword', (req, res) => {
  * @apiError (RequestFormatError) 422 For missing data or invalid password.
  * @apiError (Internal Error) 500+ Internal Error.
  */
+
 userRoutes.post('/forgetPassword', (req, res) => {
 
     if (!req.body.userName) {
@@ -327,6 +330,7 @@ userRoutes.post('/forgetPassword', (req, res) => {
  * @apiError (RequestFormatError) 422 For missing data.
  * @apiError (Internal Error) 500+ Internal Error.
  */
+
 userRoutes.get('/getData', (req, res) => {
 
     if (!req.query.token) {
