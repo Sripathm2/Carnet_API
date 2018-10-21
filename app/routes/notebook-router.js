@@ -21,7 +21,16 @@ const Update_user = 'UPDATE Users SET notification = $1::text WHERE userName = $
 let notebookRoutes = express.Router();
 
 /**
- * test comment.
+ * @api {post} /createNotebook
+ * @apiName createNotebook
+ * @apiGroup notebook
+ *
+ * @apiQuery (body) {String} userName of the user.
+ *                  {String} password of the user.
+ *
+ * @apiSuccess {String} Success.
+ * @apiError (RequestFormatError) 422 For missing data or invalid password or userName.
+ * @apiError (Internal Error) 500+ Internal Error.
  */
 
 notebookRoutes.post('/createNotebook', (req, res) => {

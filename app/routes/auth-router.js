@@ -11,7 +11,16 @@ const Select_User = 'Select * From Users Where userName = $1';
 let authRoutes = express.Router();
 
 /**
- * test comment.
+ * @api {get} /token token
+ * @apiName auth
+ * @apiGroup auth
+ *
+ * @apiQuery (body) {String} userName of the user.
+ *                  {String} password of the user.
+ *
+ * @apiSuccess {String} Success.
+ * @apiError (RequestFormatError) 422 For missing data or invalid password or userName.
+ * @apiError (Internal Error) 500+ Internal Error.
  */
 
 authRoutes.get('/token', (req, res) => {
