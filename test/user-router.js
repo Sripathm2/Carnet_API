@@ -12,7 +12,7 @@ describe('user-router', function() {
 
         let owner = {
             userName: 'TestUser1',
-            password: 'TestPassword1',
+            password: 'TestPassword1@',
             email: 'test1@test.com',
             securityQuestion: 'hello hint',
             securityAnswer: 'hello',
@@ -26,6 +26,45 @@ describe('user-router', function() {
                 .send(owner)
                 .end((err, res) => {
                     res.should.have.status(200);
+                    done();
+                });
+        });
+
+        it('it should fail with invalid email.', done => {
+            owner.email = 'wrongEmail';
+            chai.request(index)
+                .post('/user/register')
+                .send(owner)
+                .end((err, res) => {
+                    res.should.have.status(422);
+                    res.body.errorType.should.be.eql('RequestFormatError');
+                    res.body.message.should.be.eql('Invalid email.');
+                    done();
+                });
+        });
+
+        it('it should fail with invalid password .', done => {
+            owner.password = 'jkfwrong';
+            chai.request(index)
+                .post('/user/register')
+                .send(owner)
+                .end((err, res) => {
+                    res.should.have.status(422);
+                    res.body.errorType.should.be.eql('RequestFormatError');
+                    res.body.message.should.be.eql('Invalid password.');
+                    done();
+                });
+        });
+
+        it('it should fail with invalid username.', done => {
+            owner.userName = 'jkfw';
+            chai.request(index)
+                .post('/user/register')
+                .send(owner)
+                .end((err, res) => {
+                    res.should.have.status(422);
+                    res.body.errorType.should.be.eql('RequestFormatError');
+                    res.body.message.should.be.eql('Invalid username.');
                     done();
                 });
         });

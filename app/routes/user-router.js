@@ -2,6 +2,8 @@ let express = require('express');
 let bcrypt = require('bcrypt');
 const { Pool, } = require('pg');
 let jwt = require('jsonwebtoken');
+let validator = require("email-validator");
+let passwordValidator = require('password-validator');
 
 const connectionString = process.env.DB_URL;
 const Insert_User = 'INSERT INTO Users (userName, password, email , securityQuestion, securityAnswer, ' +
@@ -65,6 +67,38 @@ userRoutes.post('/register', (req, res) => {
     user.securityAnswer = req.body.securityAnswer.toLowerCase();
     user.name = req.body.name;
     user.notebooks = '';
+
+    if(user.userName.indexOf(" ") !== -1 || user.userName.length < 6 || user.userName.length > 32){
+        return res.status(422).send({
+            errorType: 'RequestFormatError',
+            message: 'Invalid username.',
+        });
+    }
+
+    let schema = new passwordValidator();
+
+    schema
+        .is().min(8)
+        .is().max(100)
+        .has().uppercase()
+        .has().lowercase()
+        .has().digits()
+        .has().symbols()
+        .has().not().spaces();
+
+    if(!schema.validate(req.body.password)){
+        return res.status(422).send({
+            errorType: 'RequestFormatError',
+            message: 'Invalid password.',
+        });
+    }
+
+    if(!validator.validate(user.email)){
+        return res.status(422).send({
+            errorType: 'RequestFormatError',
+            message: 'Invalid email.',
+        });
+    }
 
     const pool = new Pool({
         connectionString: connectionString,
