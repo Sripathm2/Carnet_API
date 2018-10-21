@@ -17,9 +17,30 @@ const Select_User = 'Select * From Users Where userName = $1';
 let userRoutes = express.Router();
 
 /**
- * test comment.
- */
+ * @api {post} /user/register Register
+ * @apiName userRegister
+ * @apiGroup user
+ *
+ * @apiParam (body) {String} userName of the user.
+ * @apiParam (body) {String} password of the user.
+ * @apiParam (body) {String} email of the user.
+ * @apiParam (body) {String} securityQuestion of the user.
+ * @apiParam (body) {String} securityAnswer of the user.
+ * @apiParam (body) {String} name of the user.
+ *
+ * @apiParamExample {JSON} Request Body Example
+ *      {
+            userName: 'TestUser1',
+            password: 'TestPassword1@',
+            email: 'test1@test.com',
+            securityQuestion: 'hello hint',
+            securityAnswer: 'hello',
+            name: 'test test',
+        }
 
+ * @apiSuccess {String} Success.
+ * @apiError (RequestFormatError) 422 For missing data or invalid email, password or userName.
+ */
 userRoutes.post('/register', (req, res) => {
 
     if (!req.body.userName) {
