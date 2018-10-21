@@ -2,7 +2,7 @@ let express = require('express');
 let bcrypt = require('bcrypt');
 const { Pool, } = require('pg');
 let jwt = require('jsonwebtoken');
-let validator = require("email-validator");
+let validator = require('email-validator');
 let passwordValidator = require('password-validator');
 
 const connectionString = process.env.DB_URL;
@@ -68,7 +68,7 @@ userRoutes.post('/register', (req, res) => {
     user.name = req.body.name;
     user.notebooks = '';
 
-    if(user.userName.indexOf(" ") !== -1 || user.userName.length < 6 || user.userName.length > 32){
+    if(user.userName.indexOf(' ') !== -1 || user.userName.length < 6 || user.userName.length > 32){
         return res.status(422).send({
             errorType: 'RequestFormatError',
             message: 'Invalid username.',
