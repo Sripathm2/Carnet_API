@@ -5,6 +5,7 @@ let jwt = require('jsonwebtoken');
 let validator = require('email-validator');
 let passwordValidator = require('password-validator');
 
+//The SQL statements used.
 const connectionString = process.env.DB_URL;
 const Insert_User = 'INSERT INTO Users (userName, password, email , securityQuestion, securityAnswer, ' +
     'name, notification) VALUES ($1, $2, $3,$4, $5, $6, $7)';
@@ -40,6 +41,7 @@ let userRoutes = express.Router();
 
  * @apiSuccess {String} Success.
  * @apiError (RequestFormatError) 422 For missing data or invalid email, password or userName.
+ * @apiError (Internal Error) 500+ Internal Error.
  */
 userRoutes.post('/register', (req, res) => {
 
@@ -142,6 +144,17 @@ userRoutes.post('/register', (req, res) => {
     });
 });
 
+/**
+ * @api {get} /user/forgetPassword forgetPassword
+ * @apiName forgetPassword
+ * @apiGroup user
+ *
+ * @apiQuery (query) {String} userName of the user.
+ *
+ * @apiSuccess {String} Success.
+ * @apiError (RequestFormatError) 422 For missing data or invalid email, password or userName.
+ * @apiError (Internal Error) 500+ Internal Error.
+ */
 userRoutes.get('/forgetPassword', (req, res) => {
 
     if (!req.query.userName) {
@@ -183,6 +196,31 @@ userRoutes.get('/forgetPassword', (req, res) => {
     });
 });
 
+/**
+ * @api {post} /user/forgetPassword forgetPassword
+ * @apiName forgetPassword
+ * @apiGroup user
+ *
+ * @apiParam (body) {String} userName of the user.
+ * @apiParam (body) {String} password of the user.
+ * @apiParam (body) {String} securityQuestion of the user.
+ * @apiParam (body) {String} securityAnswer of the user.
+ * @apiParam (body) {String} name of the user.
+ *
+ * @apiParamExample {JSON} Request Body Example
+ *      {
+            userName: 'TestUser1',
+            password: 'TestPassword1@',
+            email: 'test1@test.com',
+            securityQuestion: 'hello hint',
+            securityAnswer: 'hello',
+            name: 'test test',
+        }
+
+ * @apiSuccess {String} Success.
+ * @apiError (RequestFormatError) 422 For missing data or invalid password.
+ * @apiError (Internal Error) 500+ Internal Error.
+ */
 userRoutes.post('/forgetPassword', (req, res) => {
 
     if (!req.body.userName) {
@@ -278,6 +316,17 @@ userRoutes.post('/forgetPassword', (req, res) => {
     });
 });
 
+/**
+ * @api {get} /user/getData getData
+ * @apiName getData
+ * @apiGroup user
+ *
+ * @apiQuery (query) {String} token of the user login.
+ *
+ * @apiSuccess {String} Success.
+ * @apiError (RequestFormatError) 422 For missing data.
+ * @apiError (Internal Error) 500+ Internal Error.
+ */
 userRoutes.get('/getData', (req, res) => {
 
     if (!req.query.token) {
