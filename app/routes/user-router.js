@@ -373,6 +373,7 @@ userRoutes.get('/getData', (req, res) => {
             pool.end();
             return res.send({
                 message: 'Success',
+                username:decode.userName,
                 email: response.rows[0].email,
                 name: response.rows[0].name,
                 notification: response.rows[0].notification,

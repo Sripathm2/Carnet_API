@@ -72,7 +72,7 @@ authRoutes.get('/token', (req, res) => {
 
                 let token;
                 token = jwt.sign(payload, process.env.secret, {
-                    expiresIn: '5m',
+                    expiresIn: '10h',
                 });
                 res.send({
                     token: token,
