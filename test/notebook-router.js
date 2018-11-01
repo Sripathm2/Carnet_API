@@ -270,7 +270,7 @@ describe('notebook-router', function() {
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.data.length.should.be.eql(1);
-                    res.body.data[0].name.should.be.eql('(private)notebook name');
+                    res.body.data[0].name.should.be.eql('(private)notebookabc');
                     done();
                 });
         });

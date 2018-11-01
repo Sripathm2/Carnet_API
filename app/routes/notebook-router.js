@@ -448,10 +448,12 @@ notebookRoutes.get('/search_name', (req, res) => {
             pool.end();
 
             if(decode.userName === req.query.userName) {
+                console.log('here p');
                 return res.send({
                     data: response.rows,
                 });
             } else {
+                console.log('bad h');
                 let inputdata = response.rows;
                 let outputdata = [];
                 for(let j = 0 ; j < inputdata.length ; j++){
