@@ -8,11 +8,11 @@ let passwordValidator = require('password-validator');
 //The SQL statements used.
 
 const connectionString = process.env.DB_URL;
-const Insert_User = 'INSERT INTO Users (username, password, email , securityQuestion, securityAnswer, ' +
+const Insert_User = 'INSERT INTO Users (username, password, email , securityquestion, securityanswer, ' +
     'name, notification) VALUES ($1, $2, $3,$4, $5, $6, $7)';
-const Select_User_Forget_Password = 'Select * From Users Where userName = $1';
-const Update_User_Forget_Password = 'Update Users Set password = $2 Where userName = $1';
-const Select_User = 'Select * From Users Where userName = $1';
+const Select_User_Forget_Password = 'Select * From Users Where username = $1';
+const Update_User_Forget_Password = 'Update Users Set password = $2 Where username = $1';
+const Select_User = 'Select * From Users Where username = $1';
 
 // Instantiate router
 
