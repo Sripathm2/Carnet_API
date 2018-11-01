@@ -447,24 +447,16 @@ notebookRoutes.get('/search_name', (req, res) => {
 
             pool.end();
 
-            if(decode.userName === req.query.userName) {
-                console.log('here p');
-                return res.send({
-                    data: response.rows,
-                });
-            } else {
-                console.log('bad h');
-                let inputdata = response.rows;
-                let outputdata = [];
-                for(let j = 0 ; j < inputdata.length ; j++){
-                    if(!inputdata[j].name.includes('(private)')){
-                        outputdata.push(inputdata[j]);
-                    }
+            let inputdata = response.rows;
+            let outputdata = [];
+            for(let j = 0 ; j < inputdata.length ; j++){
+                if(!inputdata[j].name.includes('(private)') || decode.userName === inputdata[j].username){
+                    outputdata.push(inputdata[j]);
                 }
-                return res.send({
-                    data: outputdata,
-                });
             }
+            return res.send({
+                data: outputdata,
+            });
         });
 
     });
