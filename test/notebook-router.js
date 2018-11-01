@@ -10,7 +10,7 @@ describe('notebook-router', function() {
 
     describe('/POST createNotebook', () => {
 
-        it('it should succeed with correct fields ', done => {
+        it('it should succeed with correct fields public', done => {
             const payload = {
                 userName: 'TestUser1',
             };
@@ -20,6 +20,22 @@ describe('notebook-router', function() {
             chai.request(index)
                 .post('/notebook/createNotebook')
                 .query( { name: 'notebook name', token: token, })
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    done();
+                });
+        });
+
+        it('it should succeed with correct fields private', done => {
+            const payload = {
+                userName: 'TestUser12',
+            };
+            let token = jwt.sign(payload, process.env.secret, {
+                expiresIn: '10h',
+            });
+            chai.request(index)
+                .post('/notebook/createNotebook')
+                .query( { name: '(private)notebookabc', token: token, })
                 .end((err, res) => {
                     res.should.have.status(200);
                     done();
@@ -224,6 +240,41 @@ describe('notebook-router', function() {
                 });
         });
 
+        it('it should succeed with correct field userName public field ', done => {
+            const payload = {
+                userName: 'TestUser1',
+            };
+            let token = jwt.sign(payload, process.env.secret, {
+                expiresIn: '10h',
+            });
+            chai.request(index)
+                .get('/notebook/search_userName')
+                .query({ token: token, userName: 'TestUser12', })
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.data.length.should.be.eql(0);
+                    done();
+                });
+        });
+
+        it('it should succeed with correct field userName private field ', done => {
+            const payload = {
+                userName: 'TestUser12',
+            };
+            let token = jwt.sign(payload, process.env.secret, {
+                expiresIn: '10h',
+            });
+            chai.request(index)
+                .get('/notebook/search_userName')
+                .query({ token: token, userName: 'TestUser12', })
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.data.length.should.be.eql(1);
+                    res.body.data[0].name.should.be.eql('(private)notebook name');
+                    done();
+                });
+        });
+
         it('it should fail with no fields ', done => {
             chai.request(index)
                 .get('/notebook/search_userName')
@@ -268,6 +319,40 @@ describe('notebook-router', function() {
                 });
         });
 
+        it('it should succeed with correct field name but public notebook', done => {
+            const payload = {
+                userName: 'testUsername1',
+            };
+            let token = jwt.sign(payload, process.env.secret, {
+                expiresIn: '10h',
+            });
+            chai.request(index)
+                .get('/notebook/search_name')
+                .query({ token: token, name: '(private)notebookabc', })
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.data.length.should.be.eql(0);
+                    done();
+                });
+        });
+
+        it('it should succeed with correct field name but private notebook', done => {
+            const payload = {
+                userName: 'TestUser12',
+            };
+            let token = jwt.sign(payload, process.env.secret, {
+                expiresIn: '10h',
+            });
+            chai.request(index)
+                .get('/notebook/search_name')
+                .query({ token: token, name: '(private)notebookabc', })
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.data.length.should.be.eql(1);
+                    done();
+                });
+        });
+
         it('it should fail with no fields ', done => {
             chai.request(index)
                 .get('/notebook/search_name')
@@ -307,7 +392,7 @@ describe('notebook-router', function() {
                 .query({ token: token, })
                 .end((err, res) => {
                     res.should.have.status(200);
-                    res.body.data.length.should.be.eql(3);
+                    res.body.data.length.should.be.eql(4);
                     done();
                 });
         });
