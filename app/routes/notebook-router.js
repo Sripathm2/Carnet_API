@@ -374,7 +374,7 @@ notebookRoutes.get('/search_userName', (req, res) => {
                 let inputdata = response.rows;
                 let outputdata = [];
                 for(let j=0;j<inputdata.length;j++){
-                    if(!inputdata[j].name.contains('(private)')){
+                    if(!inputdata[j].name.includes('(private)')){
                         outputdata.push(inputdata[j]);
                     }
                 }
@@ -457,7 +457,7 @@ notebookRoutes.get('/search_name', (req, res) => {
                 let inputdata = response.rows;
                 let outputdata = [];
                 for(let j=0;j<inputdata.length;j++){
-                    if(!inputdata[j].name.contains('(private)')){
+                    if(!inputdata[j].name.includes('(private)')){
                         outputdata.push(inputdata[j]);
                     }
                 }
