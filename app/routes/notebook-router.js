@@ -26,7 +26,7 @@ let notebookRoutes = express.Router();
  * @apiGroup notebook
  *
  * @apiParam (query) {String} token token for user authentication and authorization.
- * @apiParam (query) {String} name of the user.
+ * @apiParam (query) {String} name of the notebook.
  *
  * @apiSuccess {String} Success.
  * @apiError (RequestFormatError) 422 For missing data or invalid values.
@@ -365,9 +365,23 @@ notebookRoutes.get('/search_userName', (req, res) => {
 
             pool.end();
 
-            return res.send({
-                data: response.rows,
-            });
+            if(decode.userName === req.query.userName) {
+                return res.send({
+                    data: response.rows,
+                });
+            }
+            else{
+                let inputdata = response.rows;
+                let outputdata = [];
+                for(let j=0;j<inputdata.length;j++){
+                    if(!inputdata[j].name.contains('(private)')){
+                        outputdata.push(inputdata[j]);
+                    }
+                }
+                return res.send({
+                    data: outputdata,
+                });
+            }
         });
 
     });
@@ -434,9 +448,23 @@ notebookRoutes.get('/search_name', (req, res) => {
 
             pool.end();
 
-            return res.send({
-                data: response.rows,
-            });
+            if(decode.userName === req.query.userName) {
+                return res.send({
+                    data: response.rows,
+                });
+            }
+            else{
+                let inputdata = response.rows;
+                let outputdata = [];
+                for(let j=0;j<inputdata.length;j++){
+                    if(!inputdata[j].name.contains('(private)')){
+                        outputdata.push(inputdata[j]);
+                    }
+                }
+                return res.send({
+                    data: outputdata,
+                });
+            }
         });
 
     });
