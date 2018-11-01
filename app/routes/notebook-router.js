@@ -601,9 +601,13 @@ notebookRoutes.post('/update', (req, res) => {
             pool.end();
 
             let data = {};
-            data.like = response.rows[0].likes + parseInt(req.body.like);
-            data.dislike = response.rows[0].dislikes + parseInt(req.body.dislike);
-            data.comment = response.rows[0].comment + '--' + decode.userName + ' : ' + req.body.comment;
+            data.like = parseInt(response.rows[0].likes) + parseInt(req.body.like);
+            data.dislike = parseInt(response.rows[0].dislikes) + parseInt(req.body.dislike);
+            if(res.body.comment.length > 2) {
+                data.comment = response.rows[0].comment + '--' + decode.userName + ' : ' + req.body.comment;
+            } else {
+                data.comment = response.rows[0].comment;
+            }
 
             const pool1 = new Pool({
                 connectionString: connectionString,
