@@ -603,7 +603,8 @@ notebookRoutes.post('/update', (req, res) => {
             let data = {};
             data.like = parseInt(response.rows[0].likes) + parseInt(req.body.like);
             data.dislike = parseInt(response.rows[0].dislikes) + parseInt(req.body.dislike);
-            if(res.body.comment.length > 2) {
+
+            if(req.body.comment.length > 2) {
                 data.comment = response.rows[0].comment + '--' + decode.userName + ' : ' + req.body.comment;
             } else {
                 data.comment = response.rows[0].comment;
