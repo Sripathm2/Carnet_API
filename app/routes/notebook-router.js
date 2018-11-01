@@ -642,6 +642,9 @@ function updateAll(notebookID, notebookName){
                     connectionString: connectionString,
                 });
 
+                if(!response1){
+                    return;
+                }
                 if(!response1.rows[0]){
                     return;
                 }
