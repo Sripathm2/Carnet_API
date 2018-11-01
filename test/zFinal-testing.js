@@ -22,6 +22,7 @@ describe('final testing', function() {
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.data.length.should.be.eql(4);
+                    console.log(res.body.data);
                     res.body.data[1].username.should.be.eql('testUsername1');
                     res.body.data[1].name.should.be.eql('testNotebook1');
                     res.body.data[1].uuid.should.be.eql('689c0462-ca35-11e8-a8d5-32801f1b9fd1');
