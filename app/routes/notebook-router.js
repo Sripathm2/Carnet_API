@@ -369,11 +369,10 @@ notebookRoutes.get('/search_userName', (req, res) => {
                 return res.send({
                     data: response.rows,
                 });
-            }
-            else{
+            } else {
                 let inputdata = response.rows;
                 let outputdata = [];
-                for(let j=0;j<inputdata.length;j++){
+                for(let j=0; j<inputdata.length; j++){
                     if(!inputdata[j].name.includes('(private)')){
                         outputdata.push(inputdata[j]);
                     }
@@ -452,11 +451,10 @@ notebookRoutes.get('/search_name', (req, res) => {
                 return res.send({
                     data: response.rows,
                 });
-            }
-            else{
+            } else {
                 let inputdata = response.rows;
                 let outputdata = [];
-                for(let j=0;j<inputdata.length;j++){
+                for(let j=0; j<inputdata.length; j++){
                     if(!inputdata[j].name.includes('(private)')){
                         outputdata.push(inputdata[j]);
                     }
