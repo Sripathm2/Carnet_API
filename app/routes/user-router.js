@@ -139,8 +139,6 @@ userRoutes.post('/register', (req, res) => {
             });
         }
 
-
-
         pool.end();
         return res.send({
             message: 'Success',
