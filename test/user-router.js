@@ -190,10 +190,10 @@ describe('user-router', function() {
     describe('/POST forgetPassword', () => {
 
         let owner = {
-            userName: 'TestUser1',
+            userName: 'testUsername',
             password: 'TestPassword12',
-            securityQuestion: 'hello hint',
-            securityAnswer: 'hello',
+            securityQuestion: 'what my name?',
+            securityAnswer: 'test answer',
         };
 
         let incomplete_owner = {};
