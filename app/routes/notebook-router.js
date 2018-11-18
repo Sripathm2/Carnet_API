@@ -6,7 +6,7 @@ let jwt = require('jsonwebtoken');
 const connectionString = process.env.DB_URL;
 const Insert_notebook = 'INSERT INTO Notebook  (username, name, files, subscribedBy, likes, dislikes, uuid, comment) VALUES ($1, $2, $3,$4, $5, $6, $7, $8)';
 const Update_notebook_data = 'UPDATE Notebook SET files = $1 WHERE uuid = $2 AND username = $3';
-const Update_notebook_comment = 'UPDATE Notebook SET likes = $1::numeric, dislikes = $2::numeric, comment = $3 WHERE uuid = $4 AND username = $5';
+const Update_notebook_comment = 'UPDATE Notebook SET likes = $1::numeric, dislikes = $2::numeric, comment = $3 WHERE uuid = $4';
 const Update_notebook_subscribed = 'UPDATE Notebook SET subscribedby = $1::text WHERE uuid = $2 ';
 const Select_notebook_data = 'Select * from Notebook WHERE uuid = $1 AND userName = $2';
 const Select_notebook_userName = 'Select username, name, uuid, likes, dislikes, comment from Notebook where username = $1 ';
@@ -614,7 +614,7 @@ notebookRoutes.post('/update', (req, res) => {
                 connectionString: connectionString,
             });
 
-            pool1.query(Update_notebook_comment, [data.like, data.dislike, data.comment, req.body.notebookId, decode.userName, ],  (err, response) => {
+            pool1.query(Update_notebook_comment, [data.like, data.dislike, data.comment, req.body.notebookId, ],  (err, response) => {
                 if(err){
                     pool1.end();
                     return res.send({
