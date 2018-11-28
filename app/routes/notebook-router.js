@@ -674,11 +674,11 @@ function updateAll(notebookID, notebookName){
                 });
                 console.log("camewheere------------------------");
                 if(!response1){
-                    return;
+                    pool1.end();
                 }
                 console.log("camewheere------------------------");
                 if(!response1.rows[0]){
-                    return;
+                    pool1.end();
                 }
                 
                 console.log("camewheere------------------------");
