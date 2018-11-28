@@ -672,7 +672,7 @@ function updateAll(notebookID, notebookName){
                 const pool2 = new Pool({
                     connectionString: connectionString,
                 });
-
+                
                 if(!response1){
                     return;
                 }
