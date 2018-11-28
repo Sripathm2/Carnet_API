@@ -807,6 +807,7 @@ notebookRoutes.post('/accessNotebook', (req, res) => {
                     message: err,
                 });
             }
+            console.log(response);
             pool.end();
             return res.send({
                 message: 'Success',
