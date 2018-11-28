@@ -214,8 +214,8 @@ notebookRoutes.get('/Notebook', (req, res) => {
                 });
             }
             
-            if(response.row[0].name.indexOf('(private)')){
-                if(response.row[0].username!==decode.userName && response.row[0].acess !== undefined&& response.row[0].indexOf(decode.userName) === -1){
+            if(response.rows[0].name.indexOf('(private)')){
+                if(response.rows[0].username!==decode.userName && response.rows[0].acess !== undefined && response.rows[0].indexOf(decode.userName) === -1){
                     return res.status(422).send({
                     errorType: 'NoSuchNotebookError',
                     message: 'Incorrect Notebook Id.',
