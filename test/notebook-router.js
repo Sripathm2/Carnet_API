@@ -497,13 +497,6 @@ describe('notebook-router', function() {
                 });
         });
 
-    });
-    
-    
-    
-    
-    
-    
-    
+    });  
     
 });
