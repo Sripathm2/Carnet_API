@@ -276,6 +276,9 @@ notebookRoutes.post('/subscribe', (req, res) => {
             }
 
             let subscribed = response.rows[0].subscribedby + '--' + decode.userName;
+            
+            console.log('find-------------' + subscribed);
+            console.log('findmore------------' + req.body.notebookId);
 
             pool.end();
 
