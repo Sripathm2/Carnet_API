@@ -8,7 +8,7 @@ const Insert_notebook = 'INSERT INTO Notebook  (username, name, files, subscribe
 const Update_notebook_data = 'UPDATE Notebook SET files = $1 WHERE uuid = $2 AND username = $3 RETURNING name';
 const Update_notebook_comment = 'UPDATE Notebook SET likes = $1::numeric, dislikes = $2::numeric, comment = $3 WHERE uuid = $4';
 const Update_notebook_subscribed = 'UPDATE Notebook SET subscribedby = $1::text WHERE uuid = $2 ';
-const Select_notebook_data = 'Select * from Notebook WHERE uuid = $1 AND userName = $2';
+const Select_notebook_data = 'Select * from Notebook WHERE uuid = $1';
 const Select_notebook_userName = 'Select username, name, uuid, likes, dislikes, comment from Notebook where username = $1 ';
 const Select_notebook_name = 'Select username, name, uuid, likes, dislikes, comment from Notebook where name = $1 ';
 const Select_notebook_id = 'Select * from Notebook where uuid = $1 ';
@@ -142,11 +142,6 @@ notebookRoutes.post('/updateNotebook', (req, res) => {
                 });
             }
 
-
-           
-            
-            
-
             updateAll(req.body.notebookId, response.rows[0].name);
 
             return res.send({
@@ -167,6 +162,7 @@ notebookRoutes.post('/updateNotebook', (req, res) => {
  *
  * @apiParam (query) {String} token token for user authentication and authorization.
  * @apiParam (query) {String} notebookId of the user.
+ * @apiParam (query) {String} userAuth of the user.
  *
  * @apiSuccess {String} Notebook data.
  * @apiError (RequestFormatError) 422 For missing data or invalid values.
@@ -201,7 +197,7 @@ notebookRoutes.get('/Notebook', (req, res) => {
             connectionString: connectionString,
         });
 
-        pool.query(Select_notebook_data, [req.query.notebookId, decode.userName, ],  (err, response) => {
+        pool.query(Select_notebook_data, [req.query.notebookId, ],  (err, response) => {
 
             if(err){
                 pool.end();
@@ -216,6 +212,16 @@ notebookRoutes.get('/Notebook', (req, res) => {
                     errorType: 'NoSuchNotebookError',
                     message: 'Incorrect Notebook Id.',
                 });
+            }
+            
+            if(response.row[0].name.indexOf('(private)')){
+                if(response.row[0].username!==decode.userName && response.row[0].acess !== undefined&& response.row[0].indexOf(decode.userName) === -1){
+                    return res.status(422).send({
+                    errorType: 'NoSuchNotebookError',
+                    message: 'Incorrect Notebook Id.',
+                });
+                    
+                }
             }
 
             pool.end();
@@ -281,9 +287,7 @@ notebookRoutes.post('/subscribe', (req, res) => {
             }
 
             let subscribed = response.rows[0].subscribedby + '--' + decode.userName;
-            
-            console.log('find-------------' + subscribed);
-            console.log('findmore------------' + req.body.notebookId);
+        
 
             pool.end();
 
