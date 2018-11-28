@@ -691,7 +691,7 @@ function updateAll(notebookID, notebookName){
                     data = notebookName + 'is updated'; 
                 }
 
-                pool2.query(Update_user, [arr[i], data, ], (err2, response2) => {
+                pool2.query(Update_user, [data, arr[i], ], (err2, response2) => {
                     console.log(response2);
                     pool2.end();
                 });
