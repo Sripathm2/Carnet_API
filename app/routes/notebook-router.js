@@ -799,6 +799,7 @@ notebookRoutes.post('/accessNotebook', (req, res) => {
         const pool = new Pool({
             connectionString: connectionString,
         });
+        console.log('sijdjbi----------------------');
         pool.query(Update_access, [req.body.name, req.body.notebookId, decode.userName, ],  (err, response) => {
             if(err){
                 pool.end();
