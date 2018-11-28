@@ -719,11 +719,11 @@ notebookRoutes.post('/updateNameNotebook', (req, res) => {
     if (!req.body.name) {
         return res.status(422).send({
             errorType: 'RequestFormatError',
-            message: 'Must include the data.',
+            message: 'Must include the name.',
         });
     }
     
-    jwt.update_notebook_name(req.query.token, process.env.secret, function(err, decode) {
+    jwt.verify(req.query.token, process.env.secret, function(err, decode) {
         if(err){
             return res.send({
                 errorType: 'InvalidTokenError',
@@ -746,5 +746,5 @@ notebookRoutes.post('/updateNameNotebook', (req, res) => {
                 message: 'Success',
             });
         });
-     });
+    });
 });
