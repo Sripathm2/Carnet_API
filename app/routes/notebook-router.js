@@ -4,8 +4,8 @@ const uuidv4 = require('uuid/v4');
 let jwt = require('jsonwebtoken');
 
 const connectionString = process.env.DB_URL;
-const Insert_notebook = 'INSERT INTO Notebook  (username, name, files, subscribedBy, likes, dislikes, uuid, comment) VALUES ($1, $2, $3,$4, $5, $6, $7, $8)';
-const Update_notebook_data = 'UPDATE Notebook SET files = $1 WHERE uuid = $2 AND username = $3 RETURNING name';
+const Insert_notebook = 'INSERT INTO Notebook  (username, name, files, subscribedBy, likes, dislikes, uuid, comment, access) VALUES ($1, $2, $3,$4, $5, $6, $7, $8, $9)';
+const Update_notebook_data = 'UPDATE Notebook SET files = $1 WHERE uuid = $2 AND (username = $3 OR access LIKE \'%\' || $3 || \'%\') RETURNING name';
 const Update_notebook_comment = 'UPDATE Notebook SET likes = $1::numeric, dislikes = $2::numeric, comment = $3 WHERE uuid = $4';
 const Update_notebook_subscribed = 'UPDATE Notebook SET subscribedby = $1::text WHERE uuid = $2 ';
 const Select_notebook_data = 'Select * from Notebook WHERE uuid = $1';
@@ -62,7 +62,7 @@ notebookRoutes.post('/createNotebook', (req, res) => {
             connectionString: connectionString,
         });
 
-        pool.query(Insert_notebook, [decode.userName, req.query.name, '', '', 0, 0, uuidv4(), '', ],  (err, response) => {
+        pool.query(Insert_notebook, [decode.userName, req.query.name, '', '', 0, 0, uuidv4(), '', ''],  (err, response) => {
 
             if(err){
                 pool.end();
@@ -215,7 +215,7 @@ notebookRoutes.get('/Notebook', (req, res) => {
             }
             
             if(response.rows[0].name.indexOf('(private)')){
-                if(response.rows[0].username!==decode.userName && response.rows[0].acess !== undefined && response.rows[0].indexOf(decode.userName) === -1){
+                if(response.rows[0].username!==decode.userName && response.rows[0].acess !== undefined && response.row[0].indexOf(decode.userName) === -1){
                     return res.status(422).send({
                     errorType: 'NoSuchNotebookError',
                     message: 'Incorrect Notebook Id.',
