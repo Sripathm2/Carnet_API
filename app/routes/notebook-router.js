@@ -676,12 +676,18 @@ function updateAll(notebookID, notebookName){
                 if(!response1){
                     return;
                 }
+                console.log("camewheere------------------------");
                 if(!response1.rows[0]){
                     return;
                 }
-                let data = response1.rows[0].notification +  '--' + notebookName;
+                
+                console.log("camewheere------------------------");
+                let data = response1.rows[0].notification +  '--:--' + notebookName;
+                
+                console.log("camewheere------------------------");
 
                 pool2.query(Update_user, [arr[i], data, ], (err, response2) => {
+                    console.log("camewheere------------------------");
                     pool2.end();
                 });
 
