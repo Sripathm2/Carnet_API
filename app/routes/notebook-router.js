@@ -143,15 +143,17 @@ notebookRoutes.post('/updateNotebook', (req, res) => {
             }
 
 
-            pool.end();
+           
             
-            console.log(response);
+            
 
-            updateAll(req.body.notebookId);
+            updateAll(req.body.notebookId, response.rows[0].name);
 
             return res.send({
                 message: 'Success',
             });
+            
+            pool.end();
         });
 
     });
