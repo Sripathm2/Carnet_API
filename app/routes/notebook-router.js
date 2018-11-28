@@ -13,7 +13,7 @@ const Select_notebook_userName = 'Select username, name, uuid, likes, dislikes, 
 const Select_notebook_name = 'Select username, name, uuid, likes, dislikes, comment from Notebook where name = $1 ';
 const Select_notebook_id = 'Select * from Notebook where uuid = $1 ';
 const Select_notebook = 'Select username, name, uuid, likes, dislikes, comment from Notebook';
-const Select_user = 'Select * from Users where usename = $1';
+const Select_user = 'Select * from Users where userName = $1';
 const Update_user = 'UPDATE Users SET notification = $1::text WHERE username = $2 ';
 const Update_notebook_name = 'UPDATE Notebook SET name = $1 WHERE uuid = $2 AND username = $3';
 
