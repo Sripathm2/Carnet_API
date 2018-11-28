@@ -16,6 +16,7 @@ const Select_notebook = 'Select username, name, uuid, likes, dislikes, comment f
 const Select_user = 'Select * from Users where userName = $1';
 const Update_user = 'UPDATE Users SET notification = $1::text WHERE username = $2 ';
 const Update_notebook_name = 'UPDATE Notebook SET name = $1 WHERE uuid = $2 AND username = $3';
+const Update_access = 'UPDATE Notebook SET access = access +$1 WHERE uuid = $2 AND username = $3';
 
 // Instantiate router
 
@@ -753,6 +754,52 @@ notebookRoutes.post('/updateNameNotebook', (req, res) => {
             connectionString: connectionString,
         });
         pool.query(Update_notebook_name, [req.body.name, req.body.notebookId, decode.userName, ],  (err, response) => {
+            if(err){
+                pool.end();
+                return res.send({
+                    errorType: 'InternalError',
+                    message: err,
+                });
+            }
+            pool.end();
+            return res.send({
+                message: 'Success',
+            });
+        });
+    });
+});
+
+notebookRoutes.post('/accessNotebook', (req, res) => {
+    if (!req.query.token) {
+        return res.status(422).send({
+            errorType: 'RequestFormatError',
+            message: 'Must include the token.',
+        });
+    }
+    if (!req.body.notebookId) {
+        return res.status(422).send({
+            errorType: 'RequestFormatError',
+            message: 'Must include the id of the notebook.',
+        });
+    }
+    if (!req.body.name) {
+        return res.status(422).send({
+            errorType: 'RequestFormatError',
+            message: 'Must include the name.',
+        });
+    }
+
+    jwt.verify(req.query.token, process.env.secret, function(err, decode) {
+        if(err){
+            return res.send({
+                errorType: 'InvalidTokenError',
+                message: 'invalid or expired token.',
+            });
+        }
+        const pool = new Pool({
+            connectionString: connectionString,
+        });
+        pool.query(Update_access, [req.body.name, req.body.notebookId, decode.userName, ],  (err, response) => {
             if(err){
                 pool.end();
                 return res.send({
