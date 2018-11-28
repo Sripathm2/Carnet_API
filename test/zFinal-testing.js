@@ -39,7 +39,7 @@ describe('final testing', function() {
                     res.body.data[2].dislikes.should.be.eql('0');
                     res.body.data[2].comment.should.be.eql('');
                     res.body.data[3].username.should.be.eql('testUsername');
-                    res.body.data[3].name.should.be.eql('testNotebook');
+                    res.body.data[3].name.should.be.eql('newName');
                     res.body.data[3].likes.should.be.eql('10');
                     res.body.data[3].dislikes.should.be.eql('11');
                     res.body.data[3].comment.should.be.eql(' --testUsername : test comment');
