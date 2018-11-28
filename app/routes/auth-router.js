@@ -76,7 +76,6 @@ authRoutes.get('/token', (req, res) => {
                 });
                 res.send({
                     token: token,
-                    notification: response.rows[0].notification,
                 });
             } else {
                 res.status(401).send({

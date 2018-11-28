@@ -15,6 +15,7 @@ const Select_notebook_id = 'Select * from Notebook where uuid = $1 ';
 const Select_notebook = 'Select username, name, uuid, likes, dislikes, comment from Notebook';
 const Select_user = 'Select * from Users where usename = $1';
 const Update_user = 'UPDATE Users SET notification = $1::text WHERE username = $2 ';
+const Update_notebook_name = 'UPDATE Notebook SET name = $1 WHERE uuid = $2 AND username = $3';
 
 // Instantiate router
 
@@ -687,3 +688,65 @@ function updateAll(notebookID, notebookName){
     });
 
 }
+
+/**
+ * @api {post} /notebook/updateNameNotebook updateNameNotebook
+ * @apiName updateNameNotebook
+ * @apiGroup notebook
+ *
+ * @apiParam (query) {String} token token for user authentication and authorization.
+ * @apiParam (body) {String} notebookId of the user.
+ * @apiParam (body) {String} name of the notebook.
+ *
+ * @apiSuccess {String} Success.
+ * @apiError (RequestFormatError) 422 For missing data or invalid values.
+ * @apiError (Internal Error) 500+ Internal Error.
+ */
+notebookRoutes.post('/updateNameNotebook', (req, res) => {
+     if (!req.query.token) {
+        return res.status(422).send({
+            errorType: 'RequestFormatError',
+            message: 'Must include the token.',
+        });
+    }
+     if (!req.body.notebookId) {
+        return res.status(422).send({
+            errorType: 'RequestFormatError',
+            message: 'Must include the id of the notebook.',
+        });
+    }
+     if (!req.body.name) {
+        return res.status(422).send({
+            errorType: 'RequestFormatError',
+            message: 'Must include the data.',
+        });
+    }
+    
+    jwt.update_notebook_name(req.query.token, process.env.secret, function(err, decode) {
+        if(err){
+            return res.send({
+                errorType: 'InvalidTokenError',
+                message: 'invalid or expired token.',
+            });
+        }
+         const pool = new Pool({
+            connectionString: connectionString,
+        });
+         pool.query(Update_notebook_name, [req.body.name, req.body.notebookId, decode.userName, ],  (err, response) => {
+             if(err){
+                pool.end();
+                return res.send({
+                    errorType: 'InternalError',
+                    message: err,
+                });
+            }
+             pool.end();
+            return res.send({
+                message: 'Success',
+            });
+        });
+     });
+});
+
+
+
