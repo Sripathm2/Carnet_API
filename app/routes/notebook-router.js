@@ -671,30 +671,28 @@ function updateAll(notebookID, notebookName){
                 connectionString: connectionString,
             });
 
-            pool1.query(Select_user, [arr[i], ], (err, response1) => {
+            pool1.query(Select_user, [arr[i], ], (err1, response1) => {
 
                 const pool2 = new Pool({
                     connectionString: connectionString,
                 });
-                console.log("camewheere------------------------");
-                console.log(response1);
-                console.log(arr[i]);
-                console.log(response1.rows[0]);
                 if(!response1){
                     pool1.end();
                 }
-                console.log("camewheere------------------------");
                 if(!response1.rows[0]){
                     pool1.end();
                 }
                 
-                console.log("camewheere------------------------");
-                let data = response1.rows[0].notification +  '--:--' + notebookName;
+                let data = '';
                 
-                console.log("camewheere------------------------");
+                if(!response1.rows[0].notification){
+                     data = response1.rows[0].notification +  '--:--' + notebookName + 'is updated';
+                } else {
+                    data = notebookName + 'is updated'; 
+                }
 
-                pool2.query(Update_user, [arr[i], data, ], (err, response2) => {
-                    console.log("camewheere------------------------");
+                pool2.query(Update_user, [arr[i], data, ], (err2, response2) => {
+                    console.log(response2);
                     pool2.end();
                 });
 
