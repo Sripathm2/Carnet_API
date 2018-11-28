@@ -62,7 +62,7 @@ notebookRoutes.post('/createNotebook', (req, res) => {
             connectionString: connectionString,
         });
 
-        pool.query(Insert_notebook, [decode.userName, req.query.name, '', '', 0, 0, uuidv4(), '', ''],  (err, response) => {
+        pool.query(Insert_notebook, [decode.userName, req.query.name, '', '', 0, 0, uuidv4(), '', '', ], (err, response) => {
 
             if(err){
                 pool.end();
@@ -143,12 +143,11 @@ notebookRoutes.post('/updateNotebook', (req, res) => {
             }
 
             updateAll(req.body.notebookId, response.rows[0].name);
-
+            pool.end();
             return res.send({
                 message: 'Success',
             });
-            
-            pool.end();
+
         });
 
     });
@@ -213,14 +212,14 @@ notebookRoutes.get('/Notebook', (req, res) => {
                     message: 'Incorrect Notebook Id.',
                 });
             }
-            
+
             if(response.rows[0].name.indexOf('(private)')){
-                if(response.rows[0].username!==decode.userName && response.rows[0].acess !== undefined && response.row[0].indexOf(decode.userName) === -1){
+                if(response.rows[0].username !== decode.userName && (response.rows[0].acess === undefined || response.row[0].indexOf(decode.userName) === -1)){
                     return res.status(422).send({
-                    errorType: 'NoSuchNotebookError',
-                    message: 'Incorrect Notebook Id.',
-                });
-                    
+                        errorType: 'NoSuchNotebookError',
+                        message: 'Incorrect Notebook Id.',
+                    });
+
                 }
             }
 
@@ -287,7 +286,6 @@ notebookRoutes.post('/subscribe', (req, res) => {
             }
 
             let subscribed = response.rows[0].subscribedby + '--' + decode.userName;
-        
 
             pool.end();
 
@@ -666,15 +664,11 @@ function updateAll(notebookID, notebookName){
         }
 
         let arr = response.rows[0].subscribedby.split('--');
-        
-        console.log('check namesss' + response.rows[0].subscribedby);
-
-        
 
         for(let i = 0;i < arr.length; i++) {
-            
-            if(arr[i].length<4){
-                continue;                
+
+            if(arr[i].length < 4){
+                continue;
             }
             const pool1 = new Pool({
                 connectionString: connectionString,
@@ -691,17 +685,16 @@ function updateAll(notebookID, notebookName){
                 if(!response1.rows[0]){
                     pool1.end();
                 }
-                
+
                 let data = '';
-                
+
                 if(!response1.rows[0].notification){
-                     data = response1.rows[0].notification +  '--:--' + notebookName + 'is updated';
+                    data = response1.rows[0].notification +  '--:--' + notebookName + 'is updated';
                 } else {
-                    data = notebookName + 'is updated'; 
+                    data = notebookName + 'is updated';
                 }
 
                 pool2.query(Update_user, [data, arr[i], ], (err2, response2) => {
-                    console.log(response2);
                     pool2.end();
                 });
 
@@ -748,7 +741,7 @@ notebookRoutes.post('/updateNameNotebook', (req, res) => {
             message: 'Must include the name.',
         });
     }
-    
+
     jwt.verify(req.query.token, process.env.secret, function(err, decode) {
         if(err){
             return res.send({
