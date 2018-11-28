@@ -702,20 +702,21 @@ function updateAll(notebookID, notebookName){
  * @apiError (RequestFormatError) 422 For missing data or invalid values.
  * @apiError (Internal Error) 500+ Internal Error.
  */
+
 notebookRoutes.post('/updateNameNotebook', (req, res) => {
-     if (!req.query.token) {
+    if (!req.query.token) {
         return res.status(422).send({
             errorType: 'RequestFormatError',
             message: 'Must include the token.',
         });
     }
-     if (!req.body.notebookId) {
+    if (!req.body.notebookId) {
         return res.status(422).send({
             errorType: 'RequestFormatError',
             message: 'Must include the id of the notebook.',
         });
     }
-     if (!req.body.name) {
+    if (!req.body.name) {
         return res.status(422).send({
             errorType: 'RequestFormatError',
             message: 'Must include the data.',
@@ -729,24 +730,21 @@ notebookRoutes.post('/updateNameNotebook', (req, res) => {
                 message: 'invalid or expired token.',
             });
         }
-         const pool = new Pool({
+        const pool = new Pool({
             connectionString: connectionString,
         });
-         pool.query(Update_notebook_name, [req.body.name, req.body.notebookId, decode.userName, ],  (err, response) => {
-             if(err){
+        pool.query(Update_notebook_name, [req.body.name, req.body.notebookId, decode.userName, ],  (err, response) => {
+            if(err){
                 pool.end();
                 return res.send({
                     errorType: 'InternalError',
                     message: err,
                 });
             }
-             pool.end();
+            pool.end();
             return res.send({
                 message: 'Success',
             });
         });
      });
 });
-
-
-
