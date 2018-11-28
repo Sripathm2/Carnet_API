@@ -663,6 +663,10 @@ function updateAll(notebookID, notebookName){
         
 
         for(let i = 0;i < arr.length; i++) {
+            
+            if(arr[i].length<4){
+                continue;                
+            }
             const pool1 = new Pool({
                 connectionString: connectionString,
             });
