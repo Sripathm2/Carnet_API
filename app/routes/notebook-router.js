@@ -654,6 +654,8 @@ function updateAll(notebookID, notebookName){
         }
 
         let arr = response.rows[0].subscribedby.split('--');
+        
+        console.log('check namesss' + response.rows[0].subscribedby);
 
         pool.end();
 
