@@ -677,6 +677,9 @@ function updateAll(notebookID, notebookName){
                     connectionString: connectionString,
                 });
                 console.log("camewheere------------------------");
+                console.log(response1);
+                console.log(arr[i]);
+                console.log(response1.rows[0]);
                 if(!response1){
                     pool1.end();
                 }
