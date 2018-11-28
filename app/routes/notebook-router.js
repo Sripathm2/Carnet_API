@@ -660,7 +660,7 @@ function updateAll(notebookID, notebookName){
         
         console.log('check namesss' + response.rows[0].subscribedby);
 
-        pool.end();
+        
 
         for(let i = 0;i < arr.length; i++) {
             const pool1 = new Pool({
@@ -672,7 +672,7 @@ function updateAll(notebookID, notebookName){
                 const pool2 = new Pool({
                     connectionString: connectionString,
                 });
-                
+                console.log("camewheere------------------------");
                 if(!response1){
                     return;
                 }
@@ -695,6 +695,7 @@ function updateAll(notebookID, notebookName){
 
             });
         }
+        pool.end();
 
     });
 
