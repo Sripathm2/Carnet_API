@@ -244,7 +244,7 @@ notebookRoutes.get('/Notebook', (req, res) => {
 
             return res.send({
                 data: response.rows[0].files,
-                psd: response.rows[0].pdf,
+                pdf: response.rows[0].pdf,
                 pdftext: response.rows[0].pdftext
             });
         });
