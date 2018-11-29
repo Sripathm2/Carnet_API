@@ -9,7 +9,7 @@ let passwordValidator = require('password-validator');
 
 const connectionString = process.env.DB_URL;
 const Insert_User = 'INSERT INTO Users (username, password, email , securityquestion, securityanswer, ' +
-    'name, notebooks) VALUES ($1, $2, $3,$4, $5, $6, $7)';
+    'name, notebooks, notification) VALUES ($1, $2, $3,$4, $5, $6, $7, $8)';
 const Select_User_Forget_Password = 'Select * From Users Where username = $1';
 const Update_User_Forget_Password = 'Update Users Set password = $2 Where username = $1';
 const Select_User = 'Select * From Users Where username = $1';
@@ -129,7 +129,7 @@ userRoutes.post('/register', (req, res) => {
         connectionString: connectionString,
     });
 
-    pool.query(Insert_User, [user.userName, user.password, user.email, user.securityQuestion, user.securityAnswer, user.name, ' ', ],  (err, response) => {
+    pool.query(Insert_User, [user.userName, user.password, user.email, user.securityQuestion, user.securityAnswer, user.name, ' ', ' ' ],  (err, response) => {
 
         if(err){
             pool.end();
