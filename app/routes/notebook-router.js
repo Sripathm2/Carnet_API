@@ -5,8 +5,8 @@ let jwt = require('jsonwebtoken');
 
 const connectionString = process.env.DB_URL;
 const Insert_notebook = 'INSERT INTO Notebook  (username, name, files, subscribedBy, likes, dislikes, uuid, comment, access) VALUES ($1, $2, $3,$4, $5, $6, $7, $8, $9)';
-const Update_notebook_data = 'UPDATE Notebook SET files = $1, WHERE uuid = $2 AND (username = $3 OR access LIKE \'%\' || $3 || \'%\') RETURNING name';
-const Update_notebook_comment = 'UPDATE Notebook SET likes = $1::numeric, pdf = $4, pdftext = $5 dislikes = $2::numeric, comment = $3 WHERE uuid = $4';
+const Update_notebook_data = 'UPDATE Notebook SET files = $1, pdf = $4, pdftext = $5 WHERE uuid = $2 AND (username = $3 OR access LIKE \'%\' || $3 || \'%\') RETURNING name';
+const Update_notebook_comment = 'UPDATE Notebook SET likes = $1::numeric, dislikes = $2::numeric, comment = $3 WHERE uuid = $4';
 const Update_notebook_subscribed = 'UPDATE Notebook SET subscribedby = $1::text WHERE uuid = $2 ';
 const Select_notebook_data = 'Select * from Notebook WHERE uuid = $1';
 const Select_notebook_userName = 'Select username, name, uuid, likes, dislikes, comment from Notebook where username = $1 ';
@@ -149,7 +149,7 @@ notebookRoutes.post('/updateNotebook', (req, res) => {
             connectionString: connectionString,
         });
 
-        pool.query(Update_notebook_data, [req.body.data, req.body.notebookId, decode.userName, req.body.pdf, req.body.pdftext],  (err, response) => {
+        pool.query(Update_notebook_data, [req.body.data, req.body.notebookId, decode.userName, req.body.pdf, req.body.pdftext, ],  (err, response) => {
 
             if(err){
                 pool.end();
@@ -244,7 +244,7 @@ notebookRoutes.get('/Notebook', (req, res) => {
 
             return res.send({
                 data: response.rows[0].files,
-                psd: response.rows[0].pdf,
+                pdf: response.rows[0].pdf,
                 pdftext: response.rows[0].pdftext
             });
         });
